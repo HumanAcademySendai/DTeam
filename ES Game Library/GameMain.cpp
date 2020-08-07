@@ -15,6 +15,8 @@ bool GameMain::Initialize()
 	player = GraphicsDevice.CreateSpriteFromFile(_T("Image/Chara.png"));
 	skill = GraphicsDevice.CreateSpriteFromFile(_T("Image/map.png"));
 
+	int a;
+
 	player_x = 640 - 128;
 	player_y = 360 - 96;
 	player_spd = 8.0f;
