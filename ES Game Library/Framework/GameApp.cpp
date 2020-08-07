@@ -133,7 +133,7 @@ bool CGameApp::Initialize(const HINSTANCE hInstance)
 	::SetCurrentDirectory(string_buffer);
 
 	// ƒQ[ƒ€ƒV[ƒ“İ’è
-	if(m_GameProc.CreateScene(new GameMain()) == false)
+	if(m_GameProc.CreateScene(new titleScene()) == false)
 		return false;
 
 	return true;

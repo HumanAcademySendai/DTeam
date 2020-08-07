@@ -1,23 +1,17 @@
-// #include "Extension\DirectX11\DXGraphics11.hpp"
-#include "StdAfx.h"
-#include "GameMain.h"
-
-int GameMain::time = 0;
+#include "../StdAfx.h"
+#include "TemplateScene.hpp"
 
 /// <summary>
 /// Allows the game to perform any initialization it needs to before starting to run.
-/// This is where it can query for any required services and load all of your content.
-/// Initialize will enumerate through any components and initialize them as well.
+/// This is where it can query for any required services and load any non-graphic
+/// related content.  Calling base.Initialize will enumerate through any components
+/// and initialize them as well.
 /// </summary>
-bool GameMain::Initialize()
+bool resultScene::Initialize()
 {
 	// TODO: Add your initialization logic here
-	WindowTitle(_T("ES Game Library"));
-	DefaultFont = GraphicsDevice.CreateDefaultFont();
-	
-	original= GraphicsDevice.CreateSpriteFont(_T("georgia"), 50);
-	time = 60;
-	flame = 0;
+	owari= GraphicsDevice.CreateSpriteFromFile(_T("owari.png"));
+	original = GraphicsDevice.CreateSpriteFont(_T("georgia"), 50);
 
 
 	return true;
@@ -27,30 +21,10 @@ bool GameMain::Initialize()
 /// Finalize will be called once per game and is the place to release
 /// all resource.
 /// </summary>
-void GameMain::Finalize()
+void resultScene::Finalize()
 {
 	// TODO: Add your finalization logic here
 
-}
-
-void GameMain::player()
-{
-}
-
-void GameMain::oni()
-{
-}
-
-void GameMain::kabe()
-{
-}
-
-void GameMain::cpu1()
-{
-}
-
-void GameMain::cpu2()
-{
 }
 
 /// <summary>
@@ -60,44 +34,37 @@ void GameMain::cpu2()
 /// <returns>
 /// Scene continued value.
 /// </returns>
-int GameMain::Update()
+int resultScene::Update()
 {
-	// TODO: Add your update logic here
+    // TODO: Add your update logic here
 	KeyboardBuffer keys = Keyboard->GetBuffer();
-	flame++;
-	if (flame == 60) {
-		time -= 1;
-		flame = 0;
-		if (time == 40) {
-			return GAME_SCENE(new clearScene);
-		}
-	}
 	if (keys.IsPressed(Keys_Return)) {
-		return GAME_SCENE(new resultScene);
+		return GAME_SCENE(new titleScene);
 	}
 
 
 	return 0;
 }
 
-
 /// <summary>
 /// This is called when the game should draw itself.
 /// </summary>
-void GameMain::Draw()
+void resultScene::Draw()
 {
 	// TODO: Add your drawing code here
 	GraphicsDevice.Clear(Color_CornflowerBlue);
 
 	GraphicsDevice.BeginScene();
 
-
 	SpriteBatch.Begin();
+	SpriteBatch.Draw(*owari, Vector3(0, 0, 0));
 	SpriteBatch.DrawString(original, Vector2(960, 0),
-		Color(0, 0, 255), _T("TIME:%d"), time);
+		Color(0, 0, 255), _T("Žc‚è:%d"), GameMain::GetTime());
+
 
 
 	SpriteBatch.End();
+
 
 	GraphicsDevice.EndScene();
 }
