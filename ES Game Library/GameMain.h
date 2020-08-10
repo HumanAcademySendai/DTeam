@@ -72,6 +72,19 @@ private:
 
 	float flame;
 
+	SPRITE player;
+	SPRITE title;
+	float player_x, player_y;
+	float player_spd;
+
+	SPRITE skill;
+	bool skill_state;
+	float skill_time;
+	float skill_alpha;
+	bool alpha_flag;
+
+	bool black_flag;
+	bool ligth_flag;
 
 	// ŠÖ”éŒ¾
 

@@ -13,11 +13,6 @@ bool GameMain::Initialize()
 {
 	// TODO: Add your initialization logic here
 	WindowTitle(_T("ES Game Library"));
-	DefaultFont = GraphicsDevice.CreateDefaultFont();
-	
-	original= GraphicsDevice.CreateSpriteFont(_T("georgia"), 50);
-	time = 60;
-	flame = 0;
 
 
 	return true;
@@ -63,19 +58,15 @@ void GameMain::cpu2()
 int GameMain::Update()
 {
 	// TODO: Add your update logic here
-	KeyboardBuffer keys = Keyboard->GetBuffer();
-	flame++;
-	if (flame == 60) {
-		time -= 1;
-		flame = 0;
-		if (time == 40) {
-			return GAME_SCENE(new clearScene);
-		}
-	}
-	if (keys.IsPressed(Keys_Return)) {
-		return GAME_SCENE(new resultScene);
-	}
 
+	else if (skill_time < 0)
+	{
+		skill_state = false;
+		skill_time = 0.0f;
+		alpha_flag = false;
+		skill_alpha = 1.0f;
+	}
+	
 
 	return 0;
 }
@@ -91,11 +82,14 @@ void GameMain::Draw()
 
 	GraphicsDevice.BeginScene();
 
+	SpriteBatch.Begin();
 
 	SpriteBatch.Begin();
-	SpriteBatch.DrawString(original, Vector2(960, 0),
-		Color(0, 0, 255), _T("TIME:%d"), time);
 
+	if (skill_state == true)
+	{
+		SpriteBatch.Draw(*skill, Vector3(0.0f, 0.0f, -10.0f), skill_alpha);
+	}
 
 	SpriteBatch.End();
 
