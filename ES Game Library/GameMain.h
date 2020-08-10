@@ -53,11 +53,11 @@ public:
 private:
 	void Finalize();
 	FONT DefaultFont;
-	void player();
 	void oni();
 	void kabe();
 	void cpu1();
 	void cpu2();
+	void Player();
 
 
 
