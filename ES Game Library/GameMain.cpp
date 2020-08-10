@@ -2,7 +2,7 @@
 #include "StdAfx.h"
 #include "GameMain.h"
 
-int GameMain::time = 0;
+
 
 /// <summary>
 /// Allows the game to perform any initialization it needs to before starting to run.
@@ -13,7 +13,29 @@ bool GameMain::Initialize()
 {
 	// TODO: Add your initialization logic here
 	WindowTitle(_T("ES Game Library"));
+	DefaultFont = GraphicsDevice.CreateDefaultFont();
+	
+	original= GraphicsDevice.CreateSpriteFont(_T("georgia"), 50);
+	time = 60;
+	flame = 0;
 
+	player = GraphicsDevice.CreateSpriteFromFile(_T("Image/Chara.png"));
+	skill = GraphicsDevice.CreateSpriteFromFile(_T("Image/map.png"));
+
+
+	player_x = 640 - 128;
+	player_y = 360 - 96;
+	player_spd = 8.0f;
+
+	skill_state = false;
+	skill_time = 0.0f;
+	skill_alpha = 1.0f;
+	alpha_flag = false;
+
+	black_flag = false;
+	ligth_flag = false;
+
+	InputDevice.CreateGamePad(1);
 
 	return true;
 }
@@ -28,9 +50,7 @@ void GameMain::Finalize()
 
 }
 
-void GameMain::player()
-{
-}
+int GameMain::time = 0;
 
 void GameMain::oni()
 {
@@ -48,6 +68,10 @@ void GameMain::cpu2()
 {
 }
 
+void GameMain::Player()
+{
+}
+
 /// <summary>
 /// Allows the game to run logic such as updating the world,
 /// checking for collisions, gathering input, and playing audio.
@@ -59,6 +83,61 @@ int GameMain::Update()
 {
 	// TODO: Add your update logic here
 
+	
+
+	GamePadState pad = GamePad(0)->GetState();
+	KeyboardState key = Keyboard->GetState();
+	GamePadBuffer pad_buffer = GamePad(0)->GetBuffer();
+	KeyboardBuffer key_buffer = Keyboard->GetBuffer();
+
+	// 逃げる人の移動
+    if (key.IsKeyDown(Keys_Right) || pad.Buttons[2] != 0)
+	{
+		player_x += player_spd;
+	}
+	if (key.IsKeyDown(Keys_Left) || pad.Buttons[0] != 0)
+	{
+		player_x -= player_spd;
+	}
+
+	if (key.IsKeyDown(Keys_Down) || pad.Buttons[1] != 0)
+	{
+		player_y +=player_spd;
+	}
+	if (key.IsKeyDown(Keys_Up) || pad.Buttons[3] != 0)
+	{
+		player_y -= player_spd;
+
+	}
+
+	// 逃げる人のスキル(暗転)
+	if(black_flag == false)
+	{
+		if (key_buffer.IsPressed(Keys_Space) || pad_buffer.IsPressed(GamePad_Button6))
+		{
+			skill_state = true;
+			alpha_flag = true;
+			black_flag = true;
+		}
+	}
+
+	if (skill_state == true)
+	{
+		skill_time += 1.0f;
+
+		if (skill_time > 60.0f)
+		{
+			skill_alpha -= 0.008f;
+		}
+
+		if (skill_alpha < 0.0f)
+		{
+			skill_state = false;
+			skill_time = 0.0f;
+			skill_alpha = 1.0f;
+		}
+	}
+
 	else if (skill_time < 0)
 	{
 		skill_state = false;
@@ -67,6 +146,17 @@ int GameMain::Update()
 		skill_alpha = 1.0f;
 	}
 	
+	flame++;
+	if (flame == 60) {
+		time -= 1;
+		flame = 0;
+		if (time == 40) {
+			return GAME_SCENE(new clearScene);
+		}
+	}
+	if (key_buffer.IsPressed(Keys_Return)) {
+		return GAME_SCENE(new resultScene);
+	}
 
 	return 0;
 }
@@ -83,8 +173,10 @@ void GameMain::Draw()
 	GraphicsDevice.BeginScene();
 
 	SpriteBatch.Begin();
+	SpriteBatch.DrawString(original, Vector2(960, 0),
+		Color(0, 0, 255), _T("TIME:%d"), time);
 
-	SpriteBatch.Begin();
+	SpriteBatch.Draw(*player, Vector3(player_x, player_y, 0.0f));
 
 	if (skill_state == true)
 	{
