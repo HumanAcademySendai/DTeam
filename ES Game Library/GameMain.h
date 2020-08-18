@@ -58,7 +58,7 @@ private:
 	void cpu1();
 	void cpu2();
 	void Player();
-
+	cstring map_data_b[18];
 
 
 public:
@@ -87,5 +87,20 @@ private:
 	bool ligth_flag;
 
 	// ŠÖ”éŒ¾
+	SPRITE wall;
+	SPRITE floar;
+	//SPRITE player;
+	Vector3 player_pos;
+	Color cl;
+
+
+	std::vector<float> dist;
+
+	// ŠÖ”éŒ¾
+	/*string map_data[18];*/
+	float max;
+	float min;
+	float normal;
+	int mm[408];
 
 };

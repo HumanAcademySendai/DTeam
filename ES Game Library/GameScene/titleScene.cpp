@@ -49,7 +49,7 @@ int titleScene::Update()
 		sceneflag = 1;
 	}
 	if (sceneflag == 1) {
-		tap += 0.004;
+		tap += 0.05;
 		if (tap >= 1) {
 			return GAME_SCENE(new GameMain);
 		}
