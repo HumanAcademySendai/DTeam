@@ -92,6 +92,7 @@ private:
 	SPRITE floar;
 	SPRITE fake;
 	Vector3 fake_pos;
+	Vector3 player_pos;
 	Color cl;
 	float speed = 5;
 	int k_count;
