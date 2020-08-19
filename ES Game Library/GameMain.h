@@ -53,7 +53,7 @@ public:
 private:
 	void Finalize();
 	FONT DefaultFont;
-	void oni();
+	void ONI();
 	void kabe();
 	void cpu1();
 	void cpu2();
@@ -73,8 +73,6 @@ private:
 	float flame;
 
 	SPRITE player;
-	SPRITE title;
-	float player_x, player_y;
 	float player_spd;
 
 	SPRITE skill;
@@ -84,7 +82,10 @@ private:
 	bool alpha_flag;
 
 	bool black_flag;
-	bool ligth_flag;
+
+	SPRITE oni;
+	Vector3 oni_pos;
+	float oni_spd;
 
 	// ä÷êîêÈåæ
 	SPRITE wall;
