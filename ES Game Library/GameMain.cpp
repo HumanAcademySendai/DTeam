@@ -378,35 +378,36 @@ void GameMain::Fake()
 	
 	float max = 0;
 	
-	//		if (dist[my][mx] != 0) {
-	if (k_count == 10) {
-		
-		if (dist[my - 1][mx] > max) {
-			max = dist[my - 1][mx];
-			k = 1;
+	
+		if (k_count == 10) {
+
+			if (dist[my - 1][mx] > max) {
+				max = dist[my - 1][mx];
+				k = 1;
+			}
+			if (dist[my + 1][mx] > max) {
+				max = dist[my + 1][mx];
+				k = 2;
+
+			}
+
+			if (dist[my][mx + 1] > max) {
+				max = dist[my][mx + 1];
+				k = 3;
+
+			}
+
+			if (dist[my][mx - 1] > max) {
+				max = dist[my][mx - 1];
+				k = 4;
+			}
+
+			if (k != 0)
+				dist[my][mx] = 0;
+
+			k_count = 0;
 		}
-		if (dist[my + 1][mx] > max) {
-			max = dist[my + 1][mx];
-			k = 2;
-
-		}
-
-		if (dist[my][mx + 1] > max) {
-			max = dist[my][mx + 1];
-			k = 3;
-
-		}
-
-		if (dist[my][mx - 1] > max) {
-			max = dist[my][mx - 1];
-			k = 4;
-		}
-
-		if (k != 0)
-			dist[my][mx] = 0;
-
-		k_count = 0;
-	}
+	
 	//		}
 
 	if (k == 1) {

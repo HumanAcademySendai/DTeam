@@ -83,7 +83,7 @@ private:
 	float normal;
 	float sw_f = 0;
 	int mm[408];
-
+	
 
 	int prev_mx, prev_my;
 	int prev_nx, prev_ny;
