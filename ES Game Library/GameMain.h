@@ -53,6 +53,11 @@ public:
 private:
 	void Finalize();
 	FONT DefaultFont;
+	void ONI();
+	void kabe();
+	void cpu1();
+	void cpu2();
+	void Player();
 	void Fake();
 	cstring map_data_b[18];
 
@@ -61,12 +66,31 @@ private:
 	
 private:
 	// •Ï”éŒ¾
-	// •Ï”éŒ¾
+	static int time;
+
+	FONT original;
+
+	float flame;
+
+	SPRITE player;
+	float player_spd;
+
+	SPRITE skill;
+	bool skill_state;
+	float skill_time;
+	float skill_alpha;
+	bool alpha_flag;
+
+	bool black_flag;
+
+	SPRITE oni;
+	Vector3 oni_pos;
+	float oni_spd;
+
+	// ŠÖ”éŒ¾
 	SPRITE wall;
 	SPRITE floar;
-	SPRITE oni;
 	SPRITE fake;
-	Vector3 oni_pos;
 	Vector3 fake_pos;
 	Color cl;
 	float speed = 5;
