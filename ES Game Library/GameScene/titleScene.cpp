@@ -17,7 +17,7 @@ bool titleScene::Initialize()
 	fadeout->ColorFill(nullptr, Color(0, 0, 0));
 	tap = 0;
 	sceneflag = 0;
-	se= MediaManager.CreateMediaFromFile(_T("gun.mp3"));
+	se= MediaManager.CreateMediaFromFile(_T("click.mp3"));
 
 
 	return true;

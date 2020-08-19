@@ -16,6 +16,9 @@ bool GameMain::Initialize()
 	DefaultFont = GraphicsDevice.CreateDefaultFont();
 	
 	original= GraphicsDevice.CreateSpriteFont(_T("georgia"), 50);
+	bgm = MediaManager.CreateMediaFromFile(_T("bgm.mp3"));
+	bgm->Play();
+
 	time = 60;
 	flame = 0;
 
@@ -68,7 +71,7 @@ int GameMain::Update()
 	if (flame == 60) {
 		time -= 1;
 		flame = 0;
-		if (time == 40) {
+		if (time == 55) {
 			return GAME_SCENE(new clearScene);
 		}
 	}

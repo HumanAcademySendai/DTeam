@@ -72,6 +72,8 @@ private:
 
 	float flame;
 
+	MEDIA bgm;
+
 
 	// ŠÖ”éŒ¾
 
