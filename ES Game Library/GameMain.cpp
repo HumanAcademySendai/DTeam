@@ -64,6 +64,8 @@ bool GameMain::Initialize()
 		}
 	}
 
+	k_count = 10;
+	k = 0;
 	//for (int y = 0; y < 18; y++) {
 	//	for (int x = 0; x < 32; x++) {
 	//		if (map_data_b[y][x] == ' ')
@@ -373,56 +375,59 @@ void GameMain::Fake()
 	int my = (int)(fake_pos.y / 50);
 	int prev_mx = 0;
 	int prev_my = 0;
-	int k = 0;
+	
 	float max = 0;
-	float k_count = 0;
+	
 	//		if (dist[my][mx] != 0) {
+	if (k_count == 10) {
+		
+		if (dist[my - 1][mx] > max) {
+			max = dist[my - 1][mx];
+			k = 1;
+		}
+		if (dist[my + 1][mx] > max) {
+			max = dist[my + 1][mx];
+			k = 2;
 
-	if (dist[my - 1][mx] > max) {
-		max = dist[my - 1][mx];
-		k = 1;
+		}
+
+		if (dist[my][mx + 1] > max) {
+			max = dist[my][mx + 1];
+			k = 3;
+
+		}
+
+		if (dist[my][mx - 1] > max) {
+			max = dist[my][mx - 1];
+			k = 4;
+		}
+
+		if (k != 0)
+			dist[my][mx] = 0;
+
+		k_count = 0;
 	}
-	if (dist[my + 1][mx] > max) {
-		max = dist[my + 1][mx];
-		k = 2;
-
-	}
-
-	if (dist[my][mx + 1] > max) {
-		max = dist[my][mx + 1];
-		k = 3;
-
-	}
-
-	if (dist[my][mx - 1] > max) {
-		max = dist[my][mx - 1];
-		k = 4;
-	}
-
-	if (k != 0)
-		dist[my][mx] = 0;
-
 	//		}
 
 	if (k == 1) {
 
-		fake_pos.y -= 50;
-
+		fake_pos.y -= 5;
+		k_count++;
 	}
 	if (k == 2) {
 
-		fake_pos.y += 50;
-
+		fake_pos.y += 5;
+		k_count++;
 	}
 	if (k == 3) {
 
-		fake_pos.x += 50;
-
+		fake_pos.x += 5;
+		k_count++;
 	}
 	if (k == 4) {
 
-		fake_pos.x -= 50;
-
+		fake_pos.x -= 5;
+		k_count++;
 	}
 
 	//		}

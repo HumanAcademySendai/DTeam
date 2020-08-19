@@ -70,6 +70,8 @@ private:
 	Vector3 fake_pos;
 	Color cl;
 	float speed = 5;
+	int k_count;
+	int k;
 
 
 	std::vector<float> dist[18];
