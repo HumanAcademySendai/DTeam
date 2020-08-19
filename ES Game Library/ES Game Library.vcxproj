@@ -156,7 +156,6 @@
     </ClCompile>
     <ClCompile Include="GameMain.cpp" />
     <ClCompile Include="GameScene\clearScene.cpp" />
-    <ClCompile Include="GameScene\resultScene.cpp" />
     <ClCompile Include="GameScene\SceneShared.cpp" />
     <ClCompile Include="GameScene\TemplateScene.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
@@ -219,7 +218,6 @@
     <ClInclude Include="Extension\Squirrel\Squirrel.hpp" />
     <ClInclude Include="GameMain.h" />
     <ClInclude Include="GameScene\clearScene.hpp" />
-    <ClInclude Include="GameScene\resultScene.hpp" />
     <ClInclude Include="GameScene\SceneShared.hpp" />
     <ClInclude Include="GameScene\TemplateScene.hpp" />
     <ClInclude Include="GameScene\titleScene.hpp" />
