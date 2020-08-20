@@ -1,17 +1,19 @@
 #pragma once
 
-#include "ESGLib.h"
-#include "GameScene/GameScene.hpp"
+#include "GameScene.hpp"
+#include "../ESGLib.h"
 
-class GameMain : public CGameScene {
+class SelectScene : public CGameScene {
 public:
-	GameMain()
+	SelectScene()
 	{
 //		ContentRootDirectory(_T("Content"));
 	}
 
-	virtual ~GameMain()
+	virtual ~SelectScene()
 	{
+		Finalize();
+
 #ifdef _INC_SQUIRREL
 		Squirrel.ReleaseAllScripts();
 #endif
@@ -40,11 +42,8 @@ public:
 		GraphicsDevice.ReleaseAllModels();
 		GraphicsDevice.ReleaseAllVertexBuffers();
 		GraphicsDevice.ReleaseAllEffects();
-
-		Finalize();
 	}
 
-public:
 	virtual bool Initialize();
 
 	virtual int  Update();
@@ -52,39 +51,16 @@ public:
 
 private:
 	void Finalize();
-	FONT DefaultFont;
-	
-	void oni();
-	void kabe();
-	void cpu1();
-	void cpu2();
-
-
 
 public:
-	static int GetTime() { return time; }
-	
+	static int GetSelect() { return selectNo; }
+
 private:
 	// 変数宣言
-	static int time;
-
-	FONT original;
-
-	float flame;
-
-	MEDIA bgm;
-
-	
-	SPRITE player;
-	SPRITE player1;
-	SPRITE player2;
+	static int selectNo;
 
 
-	Vector3 player_pos;
-	Vector3 fake_pos;
-	Vector3 fake2_pos;
 
-
-	// 関数宣言
+	// 関数プロトタイプ
 
 };

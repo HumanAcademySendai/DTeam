@@ -1,6 +1,7 @@
 // #include "Extension\DirectX11\DXGraphics11.hpp"
 #include "StdAfx.h"
 #include "GameMain.h"
+#include "GameScene/SelectScene.hpp"
 
 int GameMain::time = 0;
 
@@ -19,8 +20,35 @@ bool GameMain::Initialize()
 	bgm = MediaManager.CreateMediaFromFile(_T("bgm.mp3"));
 	bgm->Play();
 
+	player = GraphicsDevice.CreateSpriteFromFile(_T("akuma.png"));
+	player1 = GraphicsDevice.CreateSpriteFromFile(_T("akuma2.png"));
+	player2 = GraphicsDevice.CreateSpriteFromFile(_T("akuma3.png"));
+
+
 	time = 60;
 	flame = 0;
+
+	int select = SelectScene::GetSelect();
+	Vector3 start_Pos[] = { Vector3(50,50,0), Vector3(500,50,0), Vector3(50,400,0) };
+
+	if (select == 0) {
+		player_pos = start_Pos[0];
+		fake_pos = start_Pos[1];
+		fake2_pos = start_Pos[2];
+	}
+	if (select == 1) {
+		player_pos = start_Pos[0];
+		fake_pos = start_Pos[2];
+		fake2_pos = start_Pos[1];
+	}
+	if (select == 2) {
+		player_pos = start_Pos[2];
+		fake_pos = start_Pos[0];
+		fake2_pos = start_Pos[1];
+	}
+
+
+
 
 
 	return true;
@@ -34,10 +62,6 @@ void GameMain::Finalize()
 {
 	// TODO: Add your finalization logic here
 
-}
-
-void GameMain::player()
-{
 }
 
 void GameMain::oni()
@@ -98,6 +122,10 @@ void GameMain::Draw()
 	SpriteBatch.Begin();
 	SpriteBatch.DrawString(original, Vector2(960, 0),
 		Color(0, 0, 255), _T("TIME:%d"), time);
+
+	SpriteBatch.Draw(*player, player_pos);
+	SpriteBatch.Draw(*player1, fake_pos);
+	SpriteBatch.Draw(*player2, fake2_pos);
 
 
 	SpriteBatch.End();

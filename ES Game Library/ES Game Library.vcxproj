@@ -158,6 +158,7 @@
     <ClCompile Include="GameScene\clearScene.cpp" />
     <ClCompile Include="GameScene\resultScene.cpp" />
     <ClCompile Include="GameScene\SceneShared.cpp" />
+    <ClCompile Include="GameScene\SelectScene.cpp" />
     <ClCompile Include="GameScene\TemplateScene.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../StdAfx.h</PrecompiledHeaderFile>
@@ -221,6 +222,7 @@
     <ClInclude Include="GameScene\clearScene.hpp" />
     <ClInclude Include="GameScene\resultScene.hpp" />
     <ClInclude Include="GameScene\SceneShared.hpp" />
+    <ClInclude Include="GameScene\SelectScene.hpp" />
     <ClInclude Include="GameScene\TemplateScene.hpp" />
     <ClInclude Include="GameScene\titleScene.hpp" />
     <ClInclude Include="StdAfx.h" />
