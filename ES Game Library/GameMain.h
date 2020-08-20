@@ -55,10 +55,10 @@ private:
 	FONT DefaultFont;
 	void ONI();
 	void kabe();
-	void cpu1();
-	void cpu2();
 	void Player();
 	void Fake();
+	void Fake2();
+	void AI();
 	cstring map_data_b[18];
 
 
@@ -91,26 +91,33 @@ private:
 	SPRITE wall;
 	SPRITE floar;
 	SPRITE fake;
+	SPRITE fake2;
 	Vector3 fake_pos;
+	Vector3 fake2_pos;
 	Vector3 player_pos;
 	Color cl;
 	float speed = 5;
 	int k_count;
 	int k;
+	int j;
+	int j_count;
 
 
 	std::vector<float> dist[18];
+	std::vector<float> dist2[18];
+	std::vector<float> dist_player[18];
 
 	// ä÷êîêÈåæ
 	/*string map_data[18];*/
-	float max;
-	float min;
+	float max,max2;
+	float min, min2;
 	float normal;
+	float normal2;
 	float sw_f = 0;
 	int mm[408];
 	
 
 	int prev_mx, prev_my;
-	int prev_nx, prev_ny;
+	int prev_mx2, prev_my2;
 
 };
