@@ -88,6 +88,8 @@ private:
 	SPRITE oni;
 	Vector3 oni_pos;
 	float oni_spd;
+	float stun_time;
+	bool stun_state;
 
 	// ŠÖ”éŒ¾
 	SPRITE wall;
