@@ -28,6 +28,7 @@ LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
 // remains consistent on all systems.
 IDI_MENUICON            ICON                    "DirectX.ico"
 
+
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -100,8 +101,12 @@ END
 
 STRINGTABLE
 BEGIN
-    IDS_SCREENWIDTH         "1280"
-    IDS_SCREENHEIGHT        "720"
+    IDS_SCREENWIDTH         "1600"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_SCREENHEIGHT        "900"
     IDS_FRAMERATE           "60"
     IDS_FULLSCREEN          "0"
     IDS_MOUSECURSOR         "1"

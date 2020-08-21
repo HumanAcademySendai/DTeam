@@ -14,6 +14,8 @@ bool GameMain::Initialize()
 {
 	// TODO: Add your initialization logic here
 	WindowTitle(_T("ES Game Library"));
+	MediaManager.Attach(GraphicsDevice);
+
 	DefaultFont = GraphicsDevice.CreateDefaultFont();
 	
 	original= GraphicsDevice.CreateSpriteFont(_T("georgia"), 50);
@@ -31,17 +33,17 @@ bool GameMain::Initialize()
 	Vector3 start_Pos[] = { Vector3(50,50,0), Vector3(500,50,0), Vector3(50,400,0) };
 
 	if (select == 0) {
-		player_pos = start_Pos[0];
+		player_pos = start_Pos[select];
 		fake_pos = start_Pos[1];
 		fake2_pos = start_Pos[2];
 	}
 	if (select == 1) {
-		player_pos = start_Pos[0];
+		player_pos = start_Pos[select];
 		fake_pos = start_Pos[2];
-		fake2_pos = start_Pos[1];
+		fake2_pos = start_Pos[0];
 	}
 	if (select == 2) {
-		player_pos = start_Pos[2];
+		player_pos = start_Pos[select];
 		fake_pos = start_Pos[0];
 		fake2_pos = start_Pos[1];
 	}

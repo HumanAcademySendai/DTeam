@@ -10,6 +10,7 @@
 bool resultScene::Initialize()
 {
 	// TODO: Add your initialization logic here
+	InputDevice.CreateGamePad(1);
 	owari= GraphicsDevice.CreateSpriteFromFile(_T("tukamaru.png"));
 	original = GraphicsDevice.CreateSpriteFont(_T("georgia"), 50);
 
@@ -38,7 +39,8 @@ int resultScene::Update()
 {
     // TODO: Add your update logic here
 	KeyboardBuffer keys = Keyboard->GetBuffer();
-	if (keys.IsPressed(Keys_Return)) {
+	GamePadState pad = GamePad(0)->GetState();
+	if (keys.IsPressed(Keys_Return)||(pad.Buttons[3])) {
 		return GAME_SCENE(new titleScene);
 	}
 

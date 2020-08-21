@@ -11,13 +11,15 @@ bool titleScene::Initialize()
 {
 	// TODO: Add your initialization logic here
 	MediaManager.Attach(GraphicsDevice);
+	InputDevice.CreateGamePad(1);
 
 	title = GraphicsDevice.CreateSpriteFromFile(_T("title.png"));
-	fadeout = GraphicsDevice.CreateSprite(1280, 720, PixelFormat_RGBA8888);
+	fadeout = GraphicsDevice.CreateSprite(1600, 900, PixelFormat_RGBA8888);
 	fadeout->ColorFill(nullptr, Color(0, 0, 0));
 	tap = 0;
 	sceneflag = 0;
 	se= MediaManager.CreateMediaFromFile(_T("click.mp3"));
+	original= GraphicsDevice.CreateSpriteFont(_T("georgia"), 80);
 
 
 	return true;
@@ -44,7 +46,9 @@ int titleScene::Update()
 {
     // TODO: Add your update logic here
 	KeyboardBuffer keys = Keyboard->GetBuffer();
-	if (keys.IsPressed(Keys_Return)) {
+	GamePadState pad = GamePad(0)->GetState();
+
+	if (keys.IsPressed(Keys_Return)|| (pad.Buttons[3])) {
 		se->Play();
 		sceneflag = 1;
 	}
@@ -71,6 +75,9 @@ void titleScene::Draw()
 	SpriteBatch.Begin();
 	SpriteBatch.Draw(*title, Vector3(0, 0, 0));
 	SpriteBatch.Draw(*fadeout, Vector3(0, 0, 0), tap);
+
+	//SpriteBatch.DrawString(original, Vector2(550, 800),
+		//Color(255, 0, 100), _T("PRESS ENTER TO START"));
 
 	SpriteBatch.End();
 

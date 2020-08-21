@@ -13,6 +13,8 @@ bool SelectScene::Initialize()
 {
 	// TODO: Add your initialization logic here
 	selectNo = 0;
+	limit = 0;
+	InputDevice.CreateGamePad(1);
 
 
 
@@ -40,7 +42,9 @@ int SelectScene::Update()
 {
     // TODO: Add your update logic here
 	KeyboardBuffer keys = Keyboard->GetBuffer();
-	if (keys.IsPressed(Keys_Return)) {
+	GamePadState pad = GamePad(0)->GetState();
+	limit += 1;
+	if (keys.IsPressed(Keys_Return)|| (pad.Buttons[3])) {
 		return GAME_SCENE(new GameMain);
 	}
 	if (keys.IsPressed(Keys_Z)) {
@@ -52,6 +56,8 @@ int SelectScene::Update()
 	if (keys.IsPressed(Keys_C)) {
 		selectNo = 2;
 	}
+
+	
 
 
 	return 0;

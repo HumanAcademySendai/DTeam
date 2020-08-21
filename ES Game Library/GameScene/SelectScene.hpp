@@ -59,6 +59,8 @@ private:
 	// 変数宣言
 	static int selectNo;
 
+	float limit;
+
 
 
 	// 関数プロトタイプ

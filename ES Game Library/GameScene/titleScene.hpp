@@ -62,6 +62,10 @@ private:
 
 	MEDIA se;
 
+	FONT original;
+
+
+
 
 	// 関数プロトタイプ
 
