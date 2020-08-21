@@ -152,6 +152,10 @@ bool GameMain::Initialize()
 	//	i++;
 	//}
 
+	int select = SelectScene::GetSelect();
+
+	Vector3 start_Pos[] = { Vector3(),Vector3(),Vector3() };
+
 	if (select == 0) {
 		player_pos = start_Pos[0];
 		fake_pos = start_Pos[1];
@@ -349,12 +353,31 @@ void GameMain::cpu1()
 /// </returns>
 int GameMain::Update()
 {
-	
+	KeyboardBuffer keys = Keyboard->GetBuffer();
 	
 	
 	Player();
 	ONI();
 	Fake();
+	flame++;
+	if (flame == 60) {
+		time -= 1;
+		flame = 0;
+		if (time == 55) {
+
+			return GAME_SCENE(new clearScene);
+		}
+	}
+
+	//ãSÇ∆ì¶Ç∞ÇÈêlÇÃìñÇΩÇËîªíË
+	if ((player_pos.x + 35 < oni_pos.x + 15 || player_pos.x + 15 > oni_pos.x + 35 ||
+				player_pos.y + 40 < oni_pos.y + 10 || player_pos.y + 10 > oni_pos.y + 40))
+		{
+		}
+		else if (time >= 0)
+		{
+				return GAME_SCENE(new resultScene);
+	}
 
 
 	return 0;
@@ -530,29 +553,10 @@ void GameMain::Fake()
 	//	}
 
 
-	//ãSÇ∆ì¶Ç∞ÇÈêlÇÃìñÇΩÇËîªíË
-	/*if ((player_pos.x + 35 < oni_pos.x + 15 || player_pos.x + 15 > oni_pos.x + 35 ||
-		player_pos.y + 40 < oni_pos.y + 10 || player_pos.y + 10 > oni_pos.y + 40))
-	{
-	}
-	else if (time >= 0)
-	{
-		return GAME_SCENE(new resultScene);
-	}*/
+	
 
-	KeyboardBuffer keys = Keyboard->GetBuffer();
-	flame++;
-	if (flame == 60) {
-		time -= 1;
-		flame = 0;
-		if (time == 55) {
-
-			return GAME_SCENE(new clearScene);
-		}
-		
-		if (keys.IsPressed(Keys_Return)) {
-			return GAME_SCENE(new resultScene);
-		}
+	
+	
 
 }
 

@@ -1,17 +1,19 @@
 #pragma once
 
-#include "ESGLib.h"
-#include "GameScene/GameScene.hpp"
+#include "GameScene.hpp"
+#include "../ESGLib.h"
 
-class GameMain : public CGameScene {
+class resultScene : public CGameScene {
 public:
-	GameMain()
+	resultScene()
 	{
 //		ContentRootDirectory(_T("Content"));
 	}
 
-	virtual ~GameMain()
+	virtual ~resultScene()
 	{
+		Finalize();
+
 #ifdef _INC_SQUIRREL
 		Squirrel.ReleaseAllScripts();
 #endif
@@ -40,11 +42,8 @@ public:
 		GraphicsDevice.ReleaseAllModels();
 		GraphicsDevice.ReleaseAllVertexBuffers();
 		GraphicsDevice.ReleaseAllEffects();
-
-		Finalize();
 	}
 
-public:
 	virtual bool Initialize();
 
 	virtual int  Update();
@@ -52,70 +51,12 @@ public:
 
 private:
 	void Finalize();
-	FONT DefaultFont;
-	void ONI();
-	void kabe();
-	void cpu1();
-	void cpu2();
-	void Player();
-	void Fake();
-	cstring map_data_b[18];
 
-
-public:
-	static int GetTime() { return time; }
-	
 private:
 	// 変数宣言
-
-	static int time;
-
+	SPRITE owari;
 	FONT original;
 
-	float flame;
-
-	SPRITE player;
-	float player_spd;
-
-	SPRITE skill;
-	bool skill_state;
-	float skill_time;
-	float skill_alpha;
-	bool alpha_flag;
-
-	bool black_flag;
-
-	SPRITE oni;
-	Vector3 oni_pos;
-	float oni_spd;
-
-	// 関数宣言
-	SPRITE wall;
-	SPRITE floar;
-	SPRITE fake;
-	Vector3 fake2_pos;
-	Vector3 fake_pos;
-	Vector3 player_pos;
-	Color cl;
-	float speed = 5;
-	int k_count;
-	int k;
-
-	MEDIA bgm;
-
-
-	std::vector<float> dist[18];
-
-	// 関数宣言
-	/*string map_data[18];*/
-	float max;
-	float min;
-	float normal;
-	float sw_f = 0;
-	int mm[408];
-	
-
-	int prev_mx, prev_my;
-	int prev_nx, prev_ny;
+	// 関数プロトタイプ
 
 };

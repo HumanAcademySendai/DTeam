@@ -1,5 +1,5 @@
 #include "../StdAfx.h"
-#include "TemplateScene.hpp"
+#include "resultScene.hpp"
 
 /// <summary>
 /// Allows the game to perform any initialization it needs to before starting to run.
