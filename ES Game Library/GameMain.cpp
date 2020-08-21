@@ -276,7 +276,7 @@ void GameMain::ONI()
 	GamePadState pad_1 = GamePad(0)->GetState();
 	GamePadState pad_2 = GamePad(1)->GetState();
 
-	pad2_direction = 0;
+	pad_direction = 0;
 	if (pad_1.X != 0 || pad_1.Y != 0) {
 		float axis_x = Math_Abs(pad_1.X);
 		float axis_y = Math_Abs(pad_1.Y);
