@@ -11,7 +11,7 @@ bool clearScene::Initialize()
 {
 	// TODO: Add your initialization logic here
 	clear = GraphicsDevice.CreateSpriteFromFile(_T("nigekiri.png"));
-
+	InputDevice.CreateGamePad(2);
 
 	return true;
 }
@@ -38,7 +38,9 @@ int clearScene::Update()
     // TODO: Add your update logic here
 
 	KeyboardBuffer keys = Keyboard->GetBuffer();
-	if (keys.IsPressed(Keys_Return)) {
+	GamePadState pad_2 = GamePad(1)->GetState();
+
+	if (keys.IsPressed(Keys_Return)||pad_2.Buttons[9]) {
 		return GAME_SCENE(new titleScene);
 	}
 

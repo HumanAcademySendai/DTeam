@@ -37,8 +37,8 @@
 //------------------------------------------------------------------------------
 enum {
 	DIDEV_BUFSIZE       =     16,	// バッファサイズ
-//	DIDEV_AXIS_MIN      =      0,	// ゲームパッド範囲
-//	DIDEV_AXIS_MAX      =  65535,
+	//DIDEV_AXIS_MIN      =      0,	// ゲームパッド範囲
+	//DIDEV_AXIS_MAX      =  65535,
 	DIDEV_AXIS_MIN      = -32767,	// ゲームパッド範囲
 	DIDEV_AXIS_MAX      =  32767,
 	DIDEV_AXIS_CENTER   = (DIDEV_AXIS_MIN + DIDEV_AXIS_MAX + 1) / 2,

@@ -68,9 +68,9 @@ bool GameMain::Initialize()
 	oni = GraphicsDevice.CreateSpriteFromFile(_T("oni.png"), Color(255, 255, 255));
 
 	map_data_b[0] =  ("################################");
-	map_data_b[1] =  ("#p           #     #          f#");
-	map_data_b[2] =  ("#   #        #     #     ####  #");
-	map_data_b[3] =  ("#   #     #                    #");
+	map_data_b[1] =  ("#p                            f#");
+	map_data_b[2] =  ("#   #        #     #   ##  ##  #");
+	map_data_b[3] =  ("#   #     #  #     #           #");
 	map_data_b[4] =  ("#   ###   #                    #");
 	map_data_b[5] =  ("#     #   #  ##  ###  #######  #");
 	map_data_b[6] =  ("#     #  ##        #           #");
@@ -78,9 +78,9 @@ bool GameMain::Initialize()
 	map_data_b[8] =  ("#   k                 #######  #");
 	map_data_b[9] =  ("#                           #  #");
 	map_data_b[10] = ("#                              #");
-	map_data_b[11] = ("#   #######    ###  ##         #");
-	map_data_b[12] = ("#   #     #    #     #         #");
-	map_data_b[13] = ("#   #          #     #         #");
+	map_data_b[11] = ("#   #######    #     #         #");
+	map_data_b[12] = ("#              #     #         #");
+	map_data_b[13] = ("#              #     #         #");
 	map_data_b[14] = ("#   ###        #     #      #  #");
 	map_data_b[15] = ("#          #                #  #");
 	map_data_b[16] = ("#          #               o   #");
@@ -195,7 +195,7 @@ bool GameMain::Initialize()
 
 	int select = SelectScene::GetSelect();
 
-	Vector3 start_Pos[] = { Vector3(50,50,0),Vector3(150,400,0),Vector3(1000,400,0) };
+	Vector3 start_Pos[] = { Vector3(150,400,0),Vector3(800,100,0),Vector3(1250,150,0) };
 
 	if (select == 0) {
 		player_pos = start_Pos[0];
@@ -220,6 +220,7 @@ bool GameMain::Initialize()
 
 
 	InputDevice.CreateGamePad(2);
+	pad2_direction = 0;
 
 	return true;
 }
@@ -280,12 +281,31 @@ void GameMain::ONI()
 	GamePadState pad_1 = GamePad(0)->GetState();
 	GamePadState pad_2 = GamePad(1)->GetState();
 
+	pad2_direction = 0;
+	if (pad_1.X != 0 || pad_1.Y != 0) {
+		float axis_x = Math_Abs(pad_1.X);
+		float axis_y = Math_Abs(pad_1.Y);
+		if (axis_x > axis_y) {
+			if (pad_1.X > 0)
+				pad_direction = 6;
+			else if (pad_1.X < 0)
+				pad_direction = 4;
+		}
+		else {
+			if (pad_1.Y > 0)
+				pad_direction = 2;
+			else if (pad_1.Y < 0)
+				pad_direction = 8;
+		}
+	}
+
+
 	int nx = (int)((oni_pos.x + 50) / 50);
 	int ny = (int)((oni_pos.y + 50) / 50);
 
 	if (stun_state == false)
 	{
-		if (key.IsKeyDown(Keys_D) || pad_1.X > 0) {
+		if (key.IsKeyDown(Keys_D) || pad_direction == 6) {
 			oni_pos.x += oni_spd;
 
 			int mx = (int)(oni_pos.x / 50);
@@ -308,7 +328,7 @@ void GameMain::ONI()
 			}
 		}
 
-		else if (key.IsKeyDown(Keys_A) || pad_1.X < 0) {
+		else if (key.IsKeyDown(Keys_A) || pad_direction == 4) {
 			oni_pos.x -= oni_spd;
 
 			int mx = (int)(oni_pos.x / 50);
@@ -329,7 +349,7 @@ void GameMain::ONI()
 			}
 		}
 
-		else if (key.IsKeyDown(Keys_S) || pad_1.Y > 0) {
+		else if (key.IsKeyDown(Keys_S) || pad_direction == 2) {
 			oni_pos.y += oni_spd;
 
 			int mx = (int)(oni_pos.x / 50);
@@ -350,7 +370,7 @@ void GameMain::ONI()
 			}
 		}
 
-		else if (key.IsKeyDown(Keys_W) || pad_1.Y < 0) {
+		else if (key.IsKeyDown(Keys_W) || pad_direction == 8) {
 			oni_pos.y -= oni_spd;
 
 			int mx = (int)(oni_pos.x / 50);
@@ -450,12 +470,84 @@ void GameMain::ONI()
 
 void GameMain::Player()
 {
-	KeyboardState key = Keyboard->GetState();
+	KeyboardState  key = Keyboard->GetState();
 	KeyboardBuffer key_buffer = Keyboard->GetBuffer();
-	GamePadState pad_2 = GamePad(1)->GetState();
+	GamePadState  pad_2 = GamePad(1)->GetState();
 	GamePadBuffer pad_buffer = GamePad(1)->GetBuffer();
 
-	if (key.IsKeyDown(Keys_Right) || pad_2.X > 0) {
+	pad2_direction = 0;
+	if (pad_2.X != 0 || pad_2.Y != 0) {
+		float axis_x = Math_Abs(pad_2.X);
+		float axis_y = Math_Abs(pad_2.Y);
+		if (axis_x > axis_y) {
+			if (pad_2.X > 0)
+				pad2_direction = 6;
+			else if (pad_2.X < 0)
+				pad2_direction = 4;
+		} else {
+			if (pad_2.Y > 0)
+				pad2_direction = 2;
+			else if (pad_2.Y < 0)
+				pad2_direction = 8;
+		}
+	}
+
+	//if (pad_buffer.Buffer[0].DeviceType == GamePad_X) {
+	//	if (pad_buffer.Buffer[0].Data.dwData != 0) {
+	//		if ((pad_buffer.Buffer[0].Data.dwData & 0x80000000) == 0) {
+	//			pad2_direction = 6;
+	//		} else {
+	//			pad2_direction = 4;
+	//		}
+	//	} else {
+	//		if (pad_2.Y > 0)
+	//			pad2_direction = 2;
+	//		else if (pad_2.Y < 0)
+	//			pad2_direction = 8;
+	//		else
+	//			pad2_direction = 0;
+	//	}
+	//} else if (pad_buffer.Buffer[0].DeviceType == GamePad_Y) {
+	//	if (pad_buffer.Buffer[0].Data.dwData != 0) {
+	//		if ((pad_buffer.Buffer[0].Data.dwData & 0x80000000) == 0) {
+	//			pad2_direction = 2;
+	//		}
+	//		else {
+	//			if (pad_2.X > 0)
+	//				pad2_direction = 6;
+	//			else if (pad_2.X < 0)
+	//				pad2_direction = 4;
+	//			else
+	//				pad2_direction = 0;
+	//		}
+	//	}
+	//	else {
+	//		if (pad2_direction == 2 || pad2_direction == 8)
+	//			pad2_direction = 0;
+	//	}
+	//}
+
+	//if (pad_buffer.IsPressed(GamePad_X)) {
+	//	int data = pad_buffer.Buffer[0].Data.dwData;
+	//	if (data > Axis_Center)
+	//		pad2_direction = 6;
+	//	else
+	//		pad2_direction = 4;
+	//} else if(pad_buffer.IsPressed(GamePad_Y)) {
+	//	int data = pad_buffer.Buffer[0].Data.dwData;
+	//	if (data > Axis_Center)
+	//		pad2_direction = 2;
+	//	else
+	//		pad2_direction = 8;
+	//} else if (pad_buffer.IsReleased(GamePad_X)) {
+	//	if(pad2_direction == 4 || pad2_direction == 6)
+	//		pad2_direction = 0;
+	//} else if (pad_buffer.IsReleased(GamePad_Y)) {
+	//	if (pad2_direction == 2 || pad2_direction == 8)
+	//		pad2_direction = 0;
+	//}
+
+	if (key.IsKeyDown(Keys_Right) || pad2_direction == 6 /* pad_2.X > 0 */) {
 		player_pos.x += player_spd;
 
 		int mx = (int)(player_pos.x / 50);
@@ -477,7 +569,7 @@ void GameMain::Player()
 	}
 		
 
-	else if (key.IsKeyDown(Keys_Left) || pad_2.X < 0) {
+	else if (key.IsKeyDown(Keys_Left) || pad2_direction == 4 /* pad_2.X < 0 */) {
 		player_pos.x -= player_spd;
 
 		int mx = (int)(player_pos.x / 50);
@@ -498,7 +590,7 @@ void GameMain::Player()
 		}
 	}
 
-		else if (key.IsKeyDown(Keys_Down) || pad_2.Y > 0) {
+		else if (key.IsKeyDown(Keys_Down) || pad2_direction == 2/* pad_2.Y > 0 */) {
 			player_pos.y += player_spd;
 
 
@@ -521,7 +613,7 @@ void GameMain::Player()
 			}
 		}
 
-		else if (key.IsKeyDown(Keys_Up) || pad_2.Y < 0) {
+		else if (key.IsKeyDown(Keys_Up) || pad2_direction == 8/* pad_2.Y < 0 */) {
 		player_pos.y -= player_spd;
 
 

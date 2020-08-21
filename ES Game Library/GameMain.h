@@ -129,4 +129,6 @@ private:
 	int prev_mx, prev_my;
 	int prev_mx2, prev_my2;
 
+	int pad2_direction;
+	int pad_direction;
 };

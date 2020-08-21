@@ -58,7 +58,7 @@ public:
 private:
 	// 変数宣言
 	static int selectNo;
-
+	SPRITE bg;
 
 
 	// 関数プロトタイプ

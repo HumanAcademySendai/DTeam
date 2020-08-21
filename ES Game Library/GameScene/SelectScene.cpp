@@ -13,8 +13,8 @@ bool SelectScene::Initialize()
 {
 	// TODO: Add your initialization logic here
 	selectNo = 0;
-	InputDevice.CreateGamePad(1);
 	InputDevice.CreateGamePad(2);
+	bg = GraphicsDevice.CreateSpriteFromFile(_T("select.png"));
 
 
 	return true;
@@ -70,7 +70,11 @@ void SelectScene::Draw()
 	GraphicsDevice.Clear(Color_CornflowerBlue);
 
 	GraphicsDevice.BeginScene();
+	SpriteBatch.Begin();
 
+	SpriteBatch.Draw(*bg, Vector3(0, 0, 0));
+
+	SpriteBatch.End();
 
 	GraphicsDevice.EndScene();
 }
