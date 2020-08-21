@@ -905,9 +905,8 @@ void GameMain::Draw()
 	SpriteBatch.Draw(*oni, oni_pos);
 
 
-	SpriteBatch.Draw(*fake, fake_pos);
-	SpriteBatch.Draw(*fake, fake2_pos);
-
+	SpriteBatch.Draw(*player, fake_pos);
+	SpriteBatch.Draw(*player, fake2_pos);
 	SpriteBatch.Draw(*player, player_pos);
 
 	/*for (int y = 0; y < 18; y++) {
@@ -938,9 +937,7 @@ void GameMain::Draw()
 
 
 
-	SpriteBatch.Draw(*player, player_pos);
-	SpriteBatch.Draw(*fake, fake_pos);
-	
+
 
 
 	SpriteBatch.End();
