@@ -83,3 +83,5 @@ private:
 #include "../GameMain.h"
 #include "titleScene.hpp"
 #include "clearScene.hpp"
+#include "resultScene.hpp"
+#include "SelectScene.hpp"

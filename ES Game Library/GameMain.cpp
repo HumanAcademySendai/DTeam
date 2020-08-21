@@ -1,6 +1,10 @@
 // #include "Extension\DirectX11\DXGraphics11.hpp"
 #include "StdAfx.h"
 #include "GameMain.h"
+#include "GameScene/SelectScene.hpp"
+
+int GameMain::time = 0;
+
 #include <fstream>
 #define MAZE_WIDTH 32
 #define MAZE_HEIGHT 18
@@ -20,7 +24,13 @@ bool GameMain::Initialize()
 	DefaultFont = GraphicsDevice.CreateDefaultFont();
 	
 	original= GraphicsDevice.CreateSpriteFont(_T("georgia"), 50);
-	time = 120;
+	bgm = MediaManager.CreateMediaFromFile(_T("bgm.mp3"));
+	bgm->Play();
+
+	
+
+
+	time = 60;
 	flame = 0;
 
 	//player = GraphicsDevice.CreateSpriteFromFile(_T("Image/Chara.png"));
@@ -141,6 +151,24 @@ bool GameMain::Initialize()
 	//	map_data[i] = filename;
 	//	i++;
 	//}
+
+	if (select == 0) {
+		player_pos = start_Pos[0];
+		fake_pos = start_Pos[1];
+		fake2_pos = start_Pos[2];
+	}
+	if (select == 1) {
+		player_pos = start_Pos[0];
+		fake_pos = start_Pos[2];
+		fake2_pos = start_Pos[1];
+	}
+	if (select == 2) {
+		player_pos = start_Pos[2];
+		fake_pos = start_Pos[0];
+		fake2_pos = start_Pos[1];
+	}
+
+
 
 	prev_mx = -1;
 	prev_my = -1;
@@ -512,8 +540,19 @@ void GameMain::Fake()
 		return GAME_SCENE(new resultScene);
 	}*/
 
+	KeyboardBuffer keys = Keyboard->GetBuffer();
+	flame++;
+	if (flame == 60) {
+		time -= 1;
+		flame = 0;
+		if (time == 55) {
 
-
+			return GAME_SCENE(new clearScene);
+		}
+		
+		if (keys.IsPressed(Keys_Return)) {
+			return GAME_SCENE(new resultScene);
+		}
 
 }
 
@@ -575,6 +614,8 @@ void GameMain::Draw()
 
 	}*/
 
+	SpriteBatch.DrawString(original, Vector2(960, 0),
+		Color(0, 0, 255), _T("TIME:%d"), time);
 	
 
 	if (skill_state == true)
@@ -583,6 +624,10 @@ void GameMain::Draw()
 	}
 
 
+
+	SpriteBatch.Draw(*player, player_pos);
+	SpriteBatch.Draw(*fake, fake_pos);
+	
 
 
 	SpriteBatch.End();

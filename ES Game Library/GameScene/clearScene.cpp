@@ -10,7 +10,7 @@
 bool clearScene::Initialize()
 {
 	// TODO: Add your initialization logic here
-	clear = GraphicsDevice.CreateSpriteFromFile(_T("clear.png"));
+	clear = GraphicsDevice.CreateSpriteFromFile(_T("nigekiri.png"));
 
 
 	return true;
@@ -36,6 +36,7 @@ void clearScene::Finalize()
 int clearScene::Update()
 {
     // TODO: Add your update logic here
+
 	KeyboardBuffer keys = Keyboard->GetBuffer();
 	if (keys.IsPressed(Keys_Return)) {
 		return GAME_SCENE(new titleScene);

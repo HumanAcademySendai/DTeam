@@ -1,5 +1,7 @@
 #include "../StdAfx.h"
-#include "titleScene.hpp"
+#include "TemplateScene.hpp"
+
+int SelectScene:: selectNo= 0;
 
 /// <summary>
 /// Allows the game to perform any initialization it needs to before starting to run.
@@ -7,17 +9,11 @@
 /// related content.  Calling base.Initialize will enumerate through any components
 /// and initialize them as well.
 /// </summary>
-bool titleScene::Initialize()
+bool SelectScene::Initialize()
 {
 	// TODO: Add your initialization logic here
-	MediaManager.Attach(GraphicsDevice);
+	selectNo = 0;
 
-	title = GraphicsDevice.CreateSpriteFromFile(_T("title.png"));
-	fadeout = GraphicsDevice.CreateSprite(1280, 720, PixelFormat_RGBA8888);
-	fadeout->ColorFill(nullptr, Color(0, 0, 0));
-	tap = 0;
-	sceneflag = 0;
-	se= MediaManager.CreateMediaFromFile(_T("click.mp3"));
 
 
 	return true;
@@ -27,7 +23,7 @@ bool titleScene::Initialize()
 /// Finalize will be called once per game and is the place to release
 /// all resource.
 /// </summary>
-void titleScene::Finalize()
+void SelectScene::Finalize()
 {
 	// TODO: Add your finalization logic here
 
@@ -40,39 +36,37 @@ void titleScene::Finalize()
 /// <returns>
 /// Scene continued value.
 /// </returns>
-int titleScene::Update()
+int SelectScene::Update()
 {
     // TODO: Add your update logic here
 	KeyboardBuffer keys = Keyboard->GetBuffer();
 	if (keys.IsPressed(Keys_Return)) {
-		se->Play();
-		sceneflag = 1;
+		return GAME_SCENE(new GameMain);
 	}
-	if (sceneflag == 1) {
-		tap += 0.05;
-		if (tap >= 1) {
-			return GAME_SCENE(new SelectScene);
-		}
+	if (keys.IsPressed(Keys_Z)) {
+		selectNo = 0;
 	}
-	
+	if (keys.IsPressed(Keys_X)) {
+		selectNo = 1;
+	}
+	if (keys.IsPressed(Keys_C)) {
+		selectNo = 2;
+	}
+
+
 	return 0;
 }
 
 /// <summary>
 /// This is called when the game should draw itself.
 /// </summary>
-void titleScene::Draw()
+void SelectScene::Draw()
 {
 	// TODO: Add your drawing code here
 	GraphicsDevice.Clear(Color_CornflowerBlue);
 
 	GraphicsDevice.BeginScene();
 
-	SpriteBatch.Begin();
-	SpriteBatch.Draw(*title, Vector3(0, 0, 0));
-	SpriteBatch.Draw(*fadeout, Vector3(0, 0, 0), tap);
-
-	SpriteBatch.End();
 
 	GraphicsDevice.EndScene();
 }

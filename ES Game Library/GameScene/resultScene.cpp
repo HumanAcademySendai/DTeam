@@ -10,7 +10,7 @@
 bool resultScene::Initialize()
 {
 	// TODO: Add your initialization logic here
-	owari= GraphicsDevice.CreateSpriteFromFile(_T("owari.png"));
+	owari= GraphicsDevice.CreateSpriteFromFile(_T("tukamaru.png"));
 	original = GraphicsDevice.CreateSpriteFont(_T("georgia"), 50);
 
 
