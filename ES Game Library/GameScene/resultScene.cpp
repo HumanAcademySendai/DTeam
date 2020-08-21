@@ -12,7 +12,8 @@ bool resultScene::Initialize()
 	// TODO: Add your initialization logic here
 	owari= GraphicsDevice.CreateSpriteFromFile(_T("tukamaru.png"));
 	original = GraphicsDevice.CreateSpriteFont(_T("georgia"), 50);
-
+	InputDevice.CreateGamePad(1);
+	InputDevice.CreateGamePad(2);
 
 	return true;
 }
@@ -38,7 +39,9 @@ int resultScene::Update()
 {
     // TODO: Add your update logic here
 	KeyboardBuffer keys = Keyboard->GetBuffer();
-	if (keys.IsPressed(Keys_Return)) {
+	GamePadBuffer pad_2 = GamePad(1)->GetBuffer();
+	if (keys.IsPressed(Keys_Return)||pad_2.IsPressed(GamePad_Button10)) 
+	{
 		return GAME_SCENE(new titleScene);
 	}
 
@@ -58,6 +61,7 @@ void resultScene::Draw()
 
 	SpriteBatch.Begin();
 	SpriteBatch.Draw(*owari, Vector3(0, 0, 0));
+
 	SpriteBatch.DrawString(original, Vector2(960, 0),
 		Color(0, 0, 255), _T("Žc‚è:%d"), GameMain::GetTime());
 

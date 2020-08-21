@@ -12,6 +12,8 @@ bool titleScene::Initialize()
 	// TODO: Add your initialization logic here
 	MediaManager.Attach(GraphicsDevice);
 
+	InputDevice.CreateGamePad(1);
+	InputDevice.CreateGamePad(2);
 	title = GraphicsDevice.CreateSpriteFromFile(_T("title.png"));
 	fadeout = GraphicsDevice.CreateSprite(1600, 900, PixelFormat_RGBA8888);
 	fadeout->ColorFill(nullptr, Color(0, 0, 0));
@@ -44,7 +46,8 @@ int titleScene::Update()
 {
     // TODO: Add your update logic here
 	KeyboardBuffer keys = Keyboard->GetBuffer();
-	if (keys.IsPressed(Keys_Return)) {
+	GamePadState pad_2 = GamePad(1)->GetState();
+	if (keys.IsPressed(Keys_Return)||pad_2.Buttons[9]) {
 		se->Play();
 		sceneflag = 1;
 	}

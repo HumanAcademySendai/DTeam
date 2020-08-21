@@ -1,5 +1,5 @@
 #include "../StdAfx.h"
-#include "TemplateScene.hpp"
+#include "SelectScene.hpp"
 
 int SelectScene:: selectNo= 0;
 
@@ -13,7 +13,8 @@ bool SelectScene::Initialize()
 {
 	// TODO: Add your initialization logic here
 	selectNo = 0;
-
+	InputDevice.CreateGamePad(1);
+	InputDevice.CreateGamePad(2);
 
 
 	return true;
@@ -40,16 +41,19 @@ int SelectScene::Update()
 {
     // TODO: Add your update logic here
 	KeyboardBuffer keys = Keyboard->GetBuffer();
-	if (keys.IsPressed(Keys_Return)) {
+	GamePadState pad_2 = GamePad(1)->GetState();
+
+	if (keys.IsPressed(Keys_Return)||pad_2.Buttons[9]) {
+
 		return GAME_SCENE(new GameMain);
 	}
-	if (keys.IsPressed(Keys_Z)) {
+	if (keys.IsPressed(Keys_Z) || pad_2.Buttons[0]) {
 		selectNo = 0;
 	}
-	if (keys.IsPressed(Keys_X)) {
+	if (keys.IsPressed(Keys_X) || pad_2.Buttons[1]) {
 		selectNo = 1;
 	}
-	if (keys.IsPressed(Keys_C)) {
+	if (keys.IsPressed(Keys_C) || pad_2.Buttons[2]) {
 		selectNo = 2;
 	}
 

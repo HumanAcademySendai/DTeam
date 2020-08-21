@@ -285,7 +285,7 @@ void GameMain::ONI()
 
 	if (stun_state == false)
 	{
-		if (key.IsKeyDown(Keys_D) || pad_1.Buttons[2] != 0) {
+		if (key.IsKeyDown(Keys_D) || pad_1.X > 0) {
 			oni_pos.x += oni_spd;
 
 			int mx = (int)(oni_pos.x / 50);
@@ -308,7 +308,7 @@ void GameMain::ONI()
 			}
 		}
 
-		else if (key.IsKeyDown(Keys_A) || pad_1.Buttons[0] != 0) {
+		else if (key.IsKeyDown(Keys_A) || pad_1.X < 0) {
 			oni_pos.x -= oni_spd;
 
 			int mx = (int)(oni_pos.x / 50);
@@ -329,7 +329,7 @@ void GameMain::ONI()
 			}
 		}
 
-		else if (key.IsKeyDown(Keys_S) || pad_1.Buttons[1] != 0) {
+		else if (key.IsKeyDown(Keys_S) || pad_1.Y > 0) {
 			oni_pos.y += oni_spd;
 
 			int mx = (int)(oni_pos.x / 50);
@@ -350,7 +350,7 @@ void GameMain::ONI()
 			}
 		}
 
-		else if (key.IsKeyDown(Keys_W) || pad_1.Buttons[3] != 0) {
+		else if (key.IsKeyDown(Keys_W) || pad_1.Y < 0) {
 			oni_pos.y -= oni_spd;
 
 			int mx = (int)(oni_pos.x / 50);
@@ -455,7 +455,7 @@ void GameMain::Player()
 	GamePadState pad_2 = GamePad(1)->GetState();
 	GamePadBuffer pad_buffer = GamePad(1)->GetBuffer();
 
-	if (key.IsKeyDown(Keys_Right) || pad_2.Buttons[2] != 0) {
+	if (key.IsKeyDown(Keys_Right) || pad_2.X > 0) {
 		player_pos.x += player_spd;
 
 		int mx = (int)(player_pos.x / 50);
@@ -477,7 +477,7 @@ void GameMain::Player()
 	}
 		
 
-	else if (key.IsKeyDown(Keys_Left) || pad_2.Buttons[0] != 0) {
+	else if (key.IsKeyDown(Keys_Left) || pad_2.X < 0) {
 		player_pos.x -= player_spd;
 
 		int mx = (int)(player_pos.x / 50);
@@ -498,7 +498,7 @@ void GameMain::Player()
 		}
 	}
 
-		else if (key.IsKeyDown(Keys_Down) || pad_2.Buttons[1] != 0) {
+		else if (key.IsKeyDown(Keys_Down) || pad_2.Y > 0) {
 			player_pos.y += player_spd;
 
 
@@ -521,7 +521,7 @@ void GameMain::Player()
 			}
 		}
 
-		else if (key.IsKeyDown(Keys_Up) || pad_2.Buttons[3] != 0) {
+		else if (key.IsKeyDown(Keys_Up) || pad_2.Y < 0) {
 		player_pos.y -= player_spd;
 
 
