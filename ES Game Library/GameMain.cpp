@@ -395,7 +395,7 @@ void GameMain::ONI()
 					else {
 						dist[y][x] = -1;
 
-						
+
 					}
 				}
 			}
@@ -410,12 +410,12 @@ void GameMain::ONI()
 				}
 			}
 
-	
+
 
 			prev_mx = mx;
 			prev_my = my;
 		}
-}
+
 
 		for (int i = 3; i > 0; i--) {
 			dist[my_k[i]][mx_k[i]] = 0;
@@ -580,8 +580,7 @@ void GameMain::Player()
 		alpha_flag = false;
 		skill_alpha = 1.0f;
 	}
-}
-	}
+	
 
 	int mx = player_pos.x / 50;
 	int my = player_pos.y / 50;
@@ -722,10 +721,25 @@ void GameMain::Fake()
 	}
 
 
-	//		}
+	// 鬼とデコイの当たり判定
+	if ((oni_pos.x + 35 < fake_pos.x + 15 || oni_pos.x + 15 > fake_pos.x + 35 ||
+		oni_pos.y + 40 < fake_pos.y + 10 || oni_pos.y + 10 > fake_pos.y + 40)) {
+	}
+	else if (time >= 0) {
 
-	//	}
+		stun_state = true;
+	}
+	if (stun_state == true) {
 
+		stun_time += 1.0f;
+
+	}
+
+	if (stun_time >= 120.0f) {
+
+		stun_state = false;
+		stun_time = 0.0f;
+	}
 
 	
 
@@ -814,8 +828,8 @@ void GameMain::Fake2() {
 	}
 
 	// 鬼とデコイの当たり判定
-	if ((oni_pos.x + 35 < fake_pos.x + 15 || oni_pos.x + 15 > fake_pos.x + 35 ||
-		oni_pos.y + 40 < fake_pos.y + 10 || oni_pos.y + 10 > fake_pos.y + 40)){
+	if ((oni_pos.x + 35 < fake2_pos.x + 15 || oni_pos.x + 15 > fake2_pos.x + 35 ||
+		oni_pos.y + 40 < fake2_pos.y + 10 || oni_pos.y + 10 > fake2_pos.y + 40)){
 	}
 	else if (time >= 0){
 
@@ -824,17 +838,16 @@ void GameMain::Fake2() {
 	if (stun_state == true){
 
 		stun_time += 1.0f;
-		fake2_pos.x -= 5;
-		j_count++;
+		
 	}
-}
+
 		if (stun_time >= 120.0f){
 
 			stun_state = false;
 			stun_time = 0.0f;
 		}
-	}
 }
+
 void GameMain::AI()
 {
 	for (int y = 0; y < 18; y++) {
@@ -897,11 +910,11 @@ void GameMain::Draw()
 
 	SpriteBatch.Draw(*player, player_pos);
 
-	for (int y = 0; y < 18; y++) {
+	/*for (int y = 0; y < 18; y++) {
 		for (int x = 0; x < dist[y].size(); x++) {
 			SpriteBatch.DrawString(DefaultFont, Vector2(x * 48, y * 16), Color(0, 0, 0), _T("%01.3f"), dist_AI[y][x]);
 		}
-	}
+	}*/
 
 
 	//SpriteBatch.DrawString(DefaultFont, Vector2(0, 0), Color(0, 0, 0), _T("%03f"), player_pos.x);
@@ -914,7 +927,7 @@ void GameMain::Draw()
 
 	}*/
 
-	SpriteBatch.DrawString(original, Vector2(960, 0),
+	SpriteBatch.DrawString(DefaultFont, Vector2(960, 0),
 		Color(0, 0, 255), _T("TIME:%d"), time);
 	
 
