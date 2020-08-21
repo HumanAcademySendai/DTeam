@@ -42,9 +42,9 @@ int SelectScene::Update()
 {
     // TODO: Add your update logic here
 	KeyboardBuffer keys = Keyboard->GetBuffer();
-	GamePadState pad = GamePad(0)->GetState();
+	GamePadBuffer pad = GamePad(0)->GetBuffer();
 	limit += 1;
-	if (keys.IsPressed(Keys_Return)|| (pad.Buttons[3])) {
+	if (keys.IsPressed(Keys_Return)) {
 		return GAME_SCENE(new GameMain);
 	}
 	if (keys.IsPressed(Keys_Z)) {

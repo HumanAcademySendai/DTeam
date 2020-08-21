@@ -39,8 +39,8 @@ int resultScene::Update()
 {
     // TODO: Add your update logic here
 	KeyboardBuffer keys = Keyboard->GetBuffer();
-	GamePadState pad = GamePad(0)->GetState();
-	if (keys.IsPressed(Keys_Return)||(pad.Buttons[3])) {
+	GamePadBuffer pad = GamePad(0)->GetBuffer();
+	if (keys.IsPressed(Keys_Return)) {
 		return GAME_SCENE(new titleScene);
 	}
 

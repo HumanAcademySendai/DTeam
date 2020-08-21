@@ -37,9 +37,9 @@ void clearScene::Finalize()
 int clearScene::Update()
 {
     // TODO: Add your update logic here
-	GamePadState pad = GamePad(0)->GetState();
+	GamePadBuffer pad = GamePad(0)->GetBuffer();
 	KeyboardBuffer keys = Keyboard->GetBuffer();
-	if (keys.IsPressed(Keys_Return)||(pad.Buttons[3])) {
+	if (keys.IsPressed(Keys_Return)) {
 		return GAME_SCENE(new titleScene);
 	}
 
