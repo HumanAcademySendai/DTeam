@@ -982,7 +982,7 @@ void GameMain::Draw()
 			}
 			else if (map_data_b[y][x] == '$') {
 
-				SpriteBatch.Draw(*bg, Vector3(x * 50, y * 50, 0), RectWH(0, 500, 50, 50));
+				SpriteBatch.Draw(*bg, Vector3(x * 50, y * 50, 0), RectWH(100, 700, 50, 50));
 			}
 			else {
 
