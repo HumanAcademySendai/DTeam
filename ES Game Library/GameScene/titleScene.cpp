@@ -68,10 +68,10 @@ int titleScene::Update()
 	}
 
 	if (alpha_flag) {
-		alpha += 3;
+		alpha += 5;
 	}
 	else {
-		alpha -= 3;
+		alpha -= 5;
 	}
 
 	spy_x += 30;
@@ -114,11 +114,11 @@ void titleScene::Draw()
 	SpriteBatch.Draw(*fadeout, Vector3(0, 0, 0), tap);
 	SpriteBatch.Draw(*pict, Vector3(chara_x, 600, 0));
 
-	SpriteBatch.Draw(*spy, Vector3(spy_x, 0, 0));
-	SpriteBatch.Draw(*escape, Vector3(escape_x, 0, 0));
+	SpriteBatch.Draw(*spy, Vector3(spy_x, -50, 0));
+	SpriteBatch.Draw(*escape, Vector3(escape_x, -50, 0));
 
 
-	SpriteBatch.DrawString(original, _T("PRESS ENTER "), Vector2(550, 750),
+	SpriteBatch.DrawString(original, _T("PRESS START "), Vector2(550, 750),
 		Color(200, 0, 50,alpha) );
 
 	SpriteBatch.End();
