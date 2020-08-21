@@ -56,11 +56,25 @@ private:
 	// 変数宣言
 	SPRITE title;
 	SPRITE fadeout;
+	SPRITE spy;
+	SPRITE escape;
+	SPRITE pict;
+	float chara_x;
+	float spy_x,escape_x;
+
+
 	float tap;
 
 	int sceneflag;
 
 	MEDIA se;
+
+	FONT original;
+	Color Bcolor;
+	bool alpha_flag;
+	int alpha;
+
+
 
 
 	// 関数プロトタイプ

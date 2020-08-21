@@ -58,6 +58,9 @@ public:
 private:
 	// •Ï”éŒ¾
 	static int selectNo;
+
+	float limit;
+
 	SPRITE bg;
 
 

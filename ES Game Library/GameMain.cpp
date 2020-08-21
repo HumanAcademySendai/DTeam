@@ -193,7 +193,7 @@ bool GameMain::Initialize()
 	Vector3 start_Pos[] = { Vector3(150,400,0),Vector3(800,100,0),Vector3(1250,150,0) };
 
 	if (select == 0) {
-		player_pos = start_Pos[0];
+		player_pos = start_Pos[select];
 		fake_pos = start_Pos[1];
 		fake2_pos = start_Pos[2];
 	}
@@ -203,7 +203,7 @@ bool GameMain::Initialize()
 		fake2_pos = start_Pos[0];
 	}
 	if (select == 2) {
-		player_pos = start_Pos[2];
+		player_pos = start_Pos[select];
 		fake_pos = start_Pos[0];
 		fake2_pos = start_Pos[1];
 	}

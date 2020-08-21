@@ -10,6 +10,7 @@
 bool resultScene::Initialize()
 {
 	// TODO: Add your initialization logic here
+	InputDevice.CreateGamePad(1);
 	owari= GraphicsDevice.CreateSpriteFromFile(_T("tukamaru.png"));
 	original = GraphicsDevice.CreateSpriteFont(_T("georgia"), 50);
 	InputDevice.CreateGamePad(1);
