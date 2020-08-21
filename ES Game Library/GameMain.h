@@ -106,6 +106,7 @@ private:
 	std::vector<float> dist[18];
 	std::vector<float> dist2[18];
 	std::vector<float> dist_player[18];
+	std::vector<float> dist_AI[18];
 
 	// ŠÖ”éŒ¾
 	/*string map_data[18];*/
@@ -116,6 +117,9 @@ private:
 	float sw_f = 0;
 	int mm[408];
 	
+
+	int mx_k[3],my_k[3];
+	int mx_i[3], my_i[3];
 
 	int prev_mx, prev_my;
 	int prev_mx2, prev_my2;

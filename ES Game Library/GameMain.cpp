@@ -86,6 +86,11 @@ bool GameMain::Initialize()
 			dist_player[y].push_back(0);
 	}
 
+	for (int y = 0; y < 18; y++) {
+		for (int x = 0; x < map_data_b[y].size(); x++)
+			dist_AI[y].push_back(0);
+	}
+
 	player_pos = Vector3(50, 50, 0);
 	for (int y = 0; y < 18; y++) {
 		for (int x = 0; x < 32; x++) {
@@ -119,6 +124,14 @@ bool GameMain::Initialize()
 			if (map_data_b[y][x] == 'k')
 				fake2_pos = Vector3(x * 50, y * 50, 0);
 		}
+	}
+
+	for (int i = 0; i < 3; i++) {
+		mx_k[i] = 0;
+		my_k[i] = 0;
+		mx_i[i] = 0;
+		my_i[i] = 0;
+
 	}
 
 	k_count = 10;
@@ -189,7 +202,7 @@ int GameMain::Update()
 	Player();
 	ONI();
 	AI();
-	//Fake();
+	Fake();
 	Fake2();
 
 
@@ -493,6 +506,7 @@ void GameMain::Player()
 				}
 				else {
 					dist_player[y][x] = -1;
+
 				}
 			}
 		}
@@ -531,29 +545,42 @@ void GameMain::Fake()
 
 			k = 0;
 
-			if (dist[my - 1][mx] > max) {
-				max = dist[my - 1][mx];
+			if (dist_AI[my - 1][mx] > max) {
+				max = dist_AI[my - 1][mx];
 				k = 1;
 			}
-			if (dist[my + 1][mx] > max) {
-				max = dist[my + 1][mx];
+			if (dist_AI[my + 1][mx] > max) {
+				max = dist_AI[my + 1][mx];
 				k = 2;
 
 			}
 
-			if (dist[my][mx + 1] > max) {
-				max = dist[my][mx + 1];
+			if (dist_AI[my][mx + 1] > max) {
+				max = dist_AI[my][mx + 1];
 				k = 3;
 
 			}
 
-			if (dist[my][mx - 1] > max) {
-				max = dist[my][mx - 1];
+			if (dist_AI[my][mx - 1] > max) {
+				max = dist_AI[my][mx - 1];
 				k = 4;
 			}
 
 			if (k != 0) {
-				dist[my][mx] = 0;
+
+				
+				for (int i = 2; i > 0; i--) {
+					dist[my_k[i]][mx_k[i]] = 0;
+					dist_player[my_k[i]][mx_k[i]] = 0;
+					mx_k[i] = mx_k[i - 1];
+					my_k[i] = my_k[i - 1];
+
+				}
+
+				mx_k[0] = 0;
+				my_k[0] = 0;
+
+				
 				k_count = 0;
 			}
 		}
@@ -641,7 +668,17 @@ void GameMain::Fake2() {
 		}
 
 		if (j != 0) {
-			dist2[my][mx] = 0;
+			for (int i = 2; i > 0; i--) {
+				dist[my_i[i]][mx_i[i]] = 0;
+				dist_player[my_i[i]][mx_i[i]] = 0;
+				mx_i[i] = mx_i[i - 1];
+				my_i[i] = my_i[i - 1];
+
+			}
+
+			mx_i[0] = 0;
+			my_i[0] = 0;
+			
 			j_count = 0;
 		}
 	}
@@ -675,9 +712,18 @@ void GameMain::AI()
 	for (int y = 0; y < 18; y++) {
 		for (int x = 0; x < map_data_b[y].size(); x++) {
 			if (dist2[y][x] >= 0)
-				dist2[y][x] = dist_player[y][x] * 0.8 + dist[y][x] * 0.2;
+				dist2[y][x] = dist_player[y][x] * 0.3 + dist[y][x] * 0.7;
 			else
 				dist2[y][x] = 0;
+		}
+	}
+
+	for (int y = 0; y < 18; y++) {
+		for (int x = 0; x < map_data_b[y].size(); x++) {
+			if (dist_AI[y][x] >= 0)
+				dist_AI[y][x] = dist_player[y][x] * 0.2 + dist[y][x] * 0.8;
+			else
+				dist_AI[y][x] = 0;
 		}
 	}
 
