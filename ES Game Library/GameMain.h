@@ -118,11 +118,11 @@ private:
 	float normal;
 	float normal2;
 	float sw_f = 0;
-	int mm[408];
+	
 	
 
 	int mx_k[4],my_k[4];
-	int mx_i[4], my_i[4];
+	int  mx_i[4], my_i[4];
 
 	int prev_mx, prev_my;
 	int prev_mx2, prev_my2;

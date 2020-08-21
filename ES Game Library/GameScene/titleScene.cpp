@@ -13,7 +13,7 @@ bool titleScene::Initialize()
 	MediaManager.Attach(GraphicsDevice);
 
 	title = GraphicsDevice.CreateSpriteFromFile(_T("title.png"));
-	fadeout = GraphicsDevice.CreateSprite(1280, 720, PixelFormat_RGBA8888);
+	fadeout = GraphicsDevice.CreateSprite(1600, 900, PixelFormat_RGBA8888);
 	fadeout->ColorFill(nullptr, Color(0, 0, 0));
 	tap = 0;
 	sceneflag = 0;

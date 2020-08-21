@@ -23,6 +23,8 @@ bool GameMain::Initialize()
 
 	DefaultFont = GraphicsDevice.CreateDefaultFont();
 	
+	MediaManager.Attach(GraphicsDevice);
+
 	original= GraphicsDevice.CreateSpriteFont(_T("georgia"), 50);
 	bgm = MediaManager.CreateMediaFromFile(_T("bgm.mp3"));
 	bgm->Play();
@@ -56,7 +58,7 @@ bool GameMain::Initialize()
 
 	fake = GraphicsDevice.CreateSpriteFromFile(_T("fake.png"));
 
-	fake2 = GraphicsDevice.CreateSpriteFromFile(_T("fake.png"));
+	
 
 	player = GraphicsDevice.CreateSpriteFromFile(_T("player.png"));
 
@@ -101,13 +103,13 @@ bool GameMain::Initialize()
 			dist_AI[y].push_back(0);
 	}
 
-	player_pos = Vector3(50, 50, 0);
+	/*player_pos = Vector3(50, 50, 0);
 	for (int y = 0; y < 18; y++) {
 		for (int x = 0; x < 32; x++) {
 			if (map_data_b[y][x] == 'p')
 				player_pos = Vector3(x * 50, y * 50, 0);
 		}
-	}
+	}*/
 
 
 	
@@ -120,7 +122,7 @@ bool GameMain::Initialize()
 		}
 	}
 
-	fake_pos = Vector3(50, 50, 0);
+	/*fake_pos = Vector3(50, 50, 0);
 	for (int y = 0; y < 18; y++) {
 		for (int x = 0; x < 32; x++) {
 			if (map_data_b[y][x] == 'f')
@@ -134,7 +136,7 @@ bool GameMain::Initialize()
 			if (map_data_b[y][x] == 'k')
 				fake2_pos = Vector3(x * 50, y * 50, 0);
 		}
-	}
+	}*/
 
 	for (int i = 0; i < 4; i++) {
 		mx_k[i] = 0;
@@ -190,7 +192,7 @@ bool GameMain::Initialize()
 
 	int select = SelectScene::GetSelect();
 
-	Vector3 start_Pos[] = { Vector3(),Vector3(),Vector3() };
+	Vector3 start_Pos[] = { Vector3(50,50,0),Vector3(150,400,0),Vector3(1000,400,0) };
 
 	if (select == 0) {
 		player_pos = start_Pos[0];
@@ -198,9 +200,9 @@ bool GameMain::Initialize()
 		fake2_pos = start_Pos[2];
 	}
 	if (select == 1) {
-		player_pos = start_Pos[0];
+		player_pos = start_Pos[1];
 		fake_pos = start_Pos[2];
-		fake2_pos = start_Pos[1];
+		fake2_pos = start_Pos[0];
 	}
 	if (select == 2) {
 		player_pos = start_Pos[2];
@@ -226,6 +228,8 @@ void GameMain::Finalize()
 
 }
 
+
+
 int GameMain::Update()
 {
 
@@ -237,12 +241,32 @@ int GameMain::Update()
 	Fake();
 	Fake2();
 
+	flame++;
+	if (flame == 60) {
+		time -= 1;
+		flame = 0;
+		if (time == 0) {
+
+			return GAME_SCENE(new clearScene);
+		}
+	}
+
+	//ãSÇ∆ì¶Ç∞ÇÈêlÇÃìñÇΩÇËîªíË
+	if ((player_pos.x + 35 < oni_pos.x + 15 || player_pos.x + 15 > oni_pos.x + 35 ||
+		player_pos.y + 40 < oni_pos.y + 10 || player_pos.y + 10 > oni_pos.y + 40))
+	{
+	}
+	else if (time >= 0)
+	{
+		return GAME_SCENE(new resultScene);
+	}
+
 
 	return 0;
 }
 
 
-int GameMain::time = 0;
+
 
 void GameMain::ONI()
 {
@@ -421,50 +445,6 @@ void GameMain::ONI()
 
 
 
-
-
-
-
-
-/// <summary>
-/// Allows the game to run logic such as updating the world,
-/// checking for collisions, gathering input, and playing audio.
-/// </summary>
-/// <returns>
-/// Scene continued value.
-/// </returns>
-int GameMain::Update()
-{
-	KeyboardBuffer keys = Keyboard->GetBuffer();
-	
-	
-	Player();
-	ONI();
-	Fake();
-	flame++;
-	if (flame == 60) {
-		time -= 1;
-		flame = 0;
-		if (time == 55) {
-
-			return GAME_SCENE(new clearScene);
-		}
-	}
-
-	//ãSÇ∆ì¶Ç∞ÇÈêlÇÃìñÇΩÇËîªíË
-	if ((player_pos.x + 35 < oni_pos.x + 15 || player_pos.x + 15 > oni_pos.x + 35 ||
-				player_pos.y + 40 < oni_pos.y + 10 || player_pos.y + 10 > oni_pos.y + 40))
-		{
-		}
-		else if (time >= 0)
-		{
-				return GAME_SCENE(new resultScene);
-	}
-
-
-	return 0;
-}
-
 void GameMain::Player()
 {
 	KeyboardState key = Keyboard->GetState();
@@ -612,6 +592,7 @@ void GameMain::Player()
 	}
 
 }
+
 
 void GameMain::Fake()
 {
@@ -847,7 +828,7 @@ void GameMain::Draw()
 
 
 	SpriteBatch.Draw(*fake, fake_pos);
-	SpriteBatch.Draw(*fake2, fake2_pos);
+	SpriteBatch.Draw(*fake, fake2_pos);
 
 	SpriteBatch.Draw(*player, player_pos);
 
