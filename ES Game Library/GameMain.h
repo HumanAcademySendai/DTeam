@@ -95,6 +95,7 @@ private:
 	SPRITE wall;
 	SPRITE floar;
 	SPRITE fake;
+	SPRITE bg;
 	Vector3 fake_pos;
 	Vector3 fake2_pos;
 	Vector3 player_pos;

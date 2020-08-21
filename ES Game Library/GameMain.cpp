@@ -29,7 +29,7 @@ bool GameMain::Initialize()
 	bgm = MediaManager.CreateMediaFromFile(_T("bgm.mp3"));
 	bgm->Play();
 
-	
+	bg = GraphicsDevice.CreateSpriteFromFile(_T("deza.png"));
 
 
 	time = 60;
@@ -39,7 +39,7 @@ bool GameMain::Initialize()
 	skill = GraphicsDevice.CreateSpriteFromFile(_T("Image/skill.png"));
 
 	player_spd = 5.0f;
-	oni_spd = player_spd * 1.1f;
+	oni_spd = player_spd * 1.2f;
 
 	skill_state = false;
 	skill_time = 0.0f;
@@ -65,25 +65,25 @@ bool GameMain::Initialize()
 
 	player = GraphicsDevice.CreateSpriteFromFile(_T("player.png"));
 
-	oni = GraphicsDevice.CreateSpriteFromFile(_T("oni.png"), Color(255, 255, 255));
+	oni = GraphicsDevice.CreateSpriteFromFile(_T("oni.png"));
 
 	map_data_b[0] =  ("################################");
-	map_data_b[1] =  ("#p                            f#");
-	map_data_b[2] =  ("#   #        #     #   ##  ##  #");
-	map_data_b[3] =  ("#   #     #  #     #           #");
-	map_data_b[4] =  ("#   ###   #                    #");
-	map_data_b[5] =  ("#     #   #  ##  ###  #######  #");
-	map_data_b[6] =  ("#     #  ##        #           #");
+	map_data_b[1] =  ("#                             f#");
+	map_data_b[2] =  ("#   $        $     $   $$  $$  #");
+	map_data_b[3] =  ("#   $     $  $     $           #");
+	map_data_b[4] =  ("#   $$$   $                    #");
+	map_data_b[5] =  ("#     $   $      $$$  $$$$$$$  #");
+	map_data_b[6] =  ("#     $   $                    #");
 	map_data_b[7] =  ("#                              #");
-	map_data_b[8] =  ("#   k                 #######  #");
-	map_data_b[9] =  ("#                           #  #");
+	map_data_b[8] =  ("#                     $$$$$$$  #");
+	map_data_b[9] =  ("#            $$                #");
 	map_data_b[10] = ("#                              #");
-	map_data_b[11] = ("#   #######    #     #         #");
-	map_data_b[12] = ("#              #     #         #");
-	map_data_b[13] = ("#              #     #         #");
-	map_data_b[14] = ("#   ###        #     #      #  #");
-	map_data_b[15] = ("#          #                #  #");
-	map_data_b[16] = ("#          #               o   #");
+	map_data_b[11] = ("#    $$$$$$    $     $         #");
+	map_data_b[12] = ("#              $     $         #");
+	map_data_b[13] = ("#              $     $         #");
+	map_data_b[14] = ("#   $$$   $    $     $      $  #");
+	map_data_b[15] = ("#          $                $  #");
+	map_data_b[16] = ("#                              #");
 	map_data_b[17] = ("################################");
 
 	for (int y = 0; y < 18; y++) {
@@ -117,13 +117,8 @@ bool GameMain::Initialize()
 
 	
 
-	oni_pos = Vector3(50, 50, 0);
-	for (int y = 0; y < 18; y++) {
-		for (int x = 0; x < 32; x++) {
-			if (map_data_b[y][x] == 'o')
-				oni_pos = Vector3(x * 50, y * 50, 0);
-		}
-	}
+	oni_pos = Vector3(1500, 800, 0);
+	
 
 	/*fake_pos = Vector3(50, 50, 0);
 	for (int y = 0; y < 18; y++) {
@@ -311,7 +306,7 @@ void GameMain::ONI()
 			int mx = (int)(oni_pos.x / 50);
 			int my = (int)(oni_pos.y / 50);
 
-			if (map_data_b[my][mx + 1] == '#')
+			if (map_data_b[my][mx + 1] != ' ')
 				oni_pos.x = mx * 50;
 
 
@@ -321,7 +316,7 @@ void GameMain::ONI()
 					oni_pos.y = ((int)oni_pos.y / 50 + 0) * 50;
 				else if (py > 40)
 					oni_pos.y = ((int)oni_pos.y / 50 + 1) * 50;
-				else if (map_data_b[my + 1][mx + 1] == '#')
+				else if (map_data_b[my + 1][mx + 1] != ' ')
 					oni_pos.x = mx * 50;
 
 
@@ -334,7 +329,7 @@ void GameMain::ONI()
 			int mx = (int)(oni_pos.x / 50);
 			int my = (int)(oni_pos.y / 50);
 
-			if (map_data_b[my][mx] == '#')
+			if (map_data_b[my][mx] != ' ')
 				oni_pos.x = (mx + 1) * 50;
 
 
@@ -344,7 +339,7 @@ void GameMain::ONI()
 					oni_pos.y = ((int)oni_pos.y / 50 + 0) * 50;
 				else if (py > 40)
 					oni_pos.y = ((int)oni_pos.y / 50 + 1) * 50;
-				else if (map_data_b[my + 1][mx] == '#')
+				else if (map_data_b[my + 1][mx] != ' ')
 					oni_pos.x = (mx + 1) * 50;
 			}
 		}
@@ -355,7 +350,7 @@ void GameMain::ONI()
 			int mx = (int)(oni_pos.x / 50);
 			int my = (int)(oni_pos.y / 50);
 
-			if (map_data_b[my + 1][mx] == '#')
+			if (map_data_b[my + 1][mx] != ' ')
 				oni_pos.y = my * 50;
 
 
@@ -365,7 +360,7 @@ void GameMain::ONI()
 					oni_pos.x = ((int)oni_pos.x / 50 + 0) * 50;
 				else if (px > 40)
 					oni_pos.x = ((int)oni_pos.x / 50 + 1) * 50;
-				else if (map_data_b[my + 1][mx + 1] == '#')
+				else if (map_data_b[my + 1][mx + 1] != ' ')
 					oni_pos.y = my * 50;
 			}
 		}
@@ -376,7 +371,7 @@ void GameMain::ONI()
 			int mx = (int)(oni_pos.x / 50);
 			int my = (int)(oni_pos.y / 50);
 
-			if (map_data_b[my][mx] == '#')
+			if (map_data_b[my][mx] != ' ')
 				oni_pos.y = (my + 1) * 50;
 
 
@@ -386,7 +381,7 @@ void GameMain::ONI()
 					oni_pos.x = ((int)oni_pos.x / 50 + 0) * 50;
 				else if (px > 40)
 					oni_pos.x = ((int)oni_pos.x / 50 + 1) * 50;
-				else if (map_data_b[my][mx + 1] == '#')
+				else if (map_data_b[my][mx + 1] != ' ')
 					oni_pos.y = (my + 1) * 50;
 			}
 		}
@@ -400,7 +395,7 @@ void GameMain::ONI()
 			min = FLT_MAX;
 			for (int y = 0; y < 18; y++) {
 				for (int x = 0; x < map_data_b[y].size(); x++) {
-					if (map_data_b[y][x] != '#') {
+					if (map_data_b[y][x] == ' ') {
 						dist[y][x] = Vector3_Distance(oni_pos, Vector3(x * 50, y * 50, 0));
 
 						if (max < dist[y][x])
@@ -553,7 +548,7 @@ void GameMain::Player()
 		int mx = (int)(player_pos.x / 50);
 		int my = (int)(player_pos.y / 50);
 
-		if (map_data_b[my][mx + 1] == '#')
+		if (map_data_b[my][mx + 1] != ' ')
 			player_pos.x = mx * 50;
 
 
@@ -563,7 +558,7 @@ void GameMain::Player()
 				player_pos.y = ((int)player_pos.y / 50 + 0) * 50;
 			else if (py > 40)
 				player_pos.y = ((int)player_pos.y / 50 + 1) * 50;
-			else if (map_data_b[my + 1][mx + 1] == '#')
+			else if (map_data_b[my + 1][mx + 1] != ' ')
 				player_pos.x = mx * 50;
 		}
 	}
@@ -575,7 +570,7 @@ void GameMain::Player()
 		int mx = (int)(player_pos.x / 50);
 		int my = (int)(player_pos.y / 50);
 
-		if (map_data_b[my][mx] == '#')
+		if (map_data_b[my][mx] != ' ')
 			player_pos.x = (mx + 1) * 50;
 
 
@@ -585,7 +580,7 @@ void GameMain::Player()
 				player_pos.y = ((int)player_pos.y / 50 + 0) * 50;
 			else if (py > 40)
 				player_pos.y = ((int)player_pos.y / 50 + 1) * 50;
-			else if (map_data_b[my + 1][mx] == '#')
+			else if (map_data_b[my + 1][mx] != ' ')
 				player_pos.x = (mx + 1) * 50;
 		}
 	}
@@ -598,7 +593,7 @@ void GameMain::Player()
 			int my = (int)(player_pos.y / 50);
 
 
-			if (map_data_b[my + 1][mx] == '#')
+			if (map_data_b[my + 1][mx] != ' ')
 				player_pos.y = my * 50;
 
 
@@ -608,7 +603,7 @@ void GameMain::Player()
 					player_pos.x = ((int)player_pos.x / 50 + 0) * 50;
 				else if (px > 40)
 					player_pos.x = ((int)player_pos.x / 50 + 1) * 50;
-				else if (map_data_b[my + 1][mx + 1] == '#')
+				else if (map_data_b[my + 1][mx + 1] != ' ')
 					player_pos.y = my * 50;
 			}
 		}
@@ -622,7 +617,7 @@ void GameMain::Player()
 
 
 
-		if (map_data_b[my][mx] == '#')
+		if (map_data_b[my][mx] != ' ')
 			player_pos.y = (my + 1) * 50;
 
 
@@ -632,7 +627,7 @@ void GameMain::Player()
 				player_pos.x = ((int)player_pos.x / 50 + 0) * 50;
 			else if (px > 40)
 				player_pos.x = ((int)player_pos.x / 50 + 1) * 50;
-			else if (map_data_b[my][mx + 1] == '#')
+			else if (map_data_b[my][mx + 1] != ' ')
 				player_pos.y = (my + 1) * 50;
 		}
 	}
@@ -682,7 +677,7 @@ void GameMain::Player()
 		min2 = FLT_MAX;
 		for (int y = 0; y < 18; y++) {
 			for (int x = 0; x < map_data_b[y].size(); x++) {
-				if (map_data_b[y][x] != '#') {
+				if (map_data_b[y][x] == ' ') {
 					dist_player[y][x] = Vector3_Distance(player_pos, Vector3(x * 50, y * 50, 0));
 
 					if (max2 < dist_player[y][x])
@@ -743,75 +738,75 @@ void GameMain::Fake()
 	float max = 0;
 	
 	
-	if (k_count == 10) {
+		if (k_count == 10) {
 
-		k = 0;
+			k = 0;
 
-		if (dist_AI[my - 1][mx] > max) {
-			max = dist_AI[my - 1][mx];
-			k = 1;
-		}
-		if (dist_AI[my + 1][mx] > max) {
-			max = dist_AI[my + 1][mx];
-			k = 2;
-
-		}
-
-		if (dist_AI[my][mx + 1] > max) {
-			max = dist_AI[my][mx + 1];
-			k = 3;
-
-		}
-
-		if (dist_AI[my][mx - 1] > max) {
-			max = dist_AI[my][mx - 1];
-			k = 4;
-		}
-
-		if (k != 0) {
-
-				
-			for (int i = 3; i > 0; i--) {
-				dist[my_k[i]][mx_k[i]] = 0;
-				dist_player[my_k[i]][mx_k[i]] = 0;
+			if (dist_AI[my - 1][mx] > max) {
+				max = dist_AI[my - 1][mx];
+				k = 1;
 			}
-			for (int i = 3; i > 0; i--) {
-				mx_k[i] = mx_k[i - 1];
-				my_k[i] = my_k[i - 1];
+			if (dist_AI[my + 1][mx] > max) {
+				max = dist_AI[my + 1][mx];
+				k = 2;
+
 			}
 
+			if (dist_AI[my][mx + 1] > max) {
+				max = dist_AI[my][mx + 1];
+				k = 3;
 
-			mx_k[0] = mx;
-			my_k[0] = my;
+			}
 
-				
-			k_count = 0;
+			if (dist_AI[my][mx - 1] > max) {
+				max = dist_AI[my][mx - 1];
+				k = 4;
+			}
+
+			if (k != 0) {
+
+
+				for (int i = 3; i > 0; i--) {
+					dist[my_k[i]][mx_k[i]] = 0;
+					dist_player[my_k[i]][mx_k[i]] = 0;
+				}
+				for (int i = 3; i > 0; i--) {
+					mx_k[i] = mx_k[i - 1];
+					my_k[i] = my_k[i - 1];
+				}
+
+
+				mx_k[0] = mx;
+				my_k[0] = my;
+
+
+				k_count = 0;
+			}
 		}
-	}
+
+
+
+		if (k == 1) {
+
+			fake_pos.y -= 5;
+			k_count++;
+		}
+		if (k == 2) {
+
+			fake_pos.y += 5;
+			k_count++;
+		}
+		if (k == 3) {
+
+			fake_pos.x += 5;
+			k_count++;
+		}
+		if (k == 4) {
+
+			fake_pos.x -= 5;
+			k_count++;
+		}
 	
-	
-
-	if (k == 1) {
-
-		fake_pos.y -= 5;
-		k_count++;
-	}
-	if (k == 2) {
-
-		fake_pos.y += 5;
-		k_count++;
-	}
-	if (k == 3) {
-
-		fake_pos.x += 5;
-		k_count++;
-	}
-	if (k == 4) {
-
-		fake_pos.x -= 5;
-		k_count++;
-	}
-
 
 	// 鬼とデコイの当たり判定
 	if ((oni_pos.x + 35 < fake_pos.x + 15 || oni_pos.x + 15 > fake_pos.x + 35 ||
@@ -851,74 +846,74 @@ void GameMain::Fake2() {
 
 	float max2 = 0;
 
+	
+		if (j_count == 10) {
 
-	if (j_count == 10) {
+
+			j = 0;
+
+			if (dist2[my - 1][mx] > max2) {
+				max2 = dist2[my - 1][mx];
+				j = 1;
+			}
+			if (dist2[my + 1][mx] > max2) {
+				max2 = dist2[my + 1][mx];
+				j = 2;
+
+			}
+
+			if (dist2[my][mx + 1] > max2) {
+				max2 = dist2[my][mx + 1];
+				j = 3;
+
+			}
+
+			if (dist2[my][mx - 1] > max2) {
+				max2 = dist2[my][mx - 1];
+				j = 4;
+			}
+
+			if (j != 0) {
 
 
-		j = 0;
+				for (int i = 3; i > 0; i--) {
+					dist[my_i[i]][mx_i[i]] = 0;
+					dist_player[my_i[i]][mx_i[i]] = 0;
+				}
+				for (int i = 3; i > 0; i--) {
+					mx_i[i] = mx_i[i - 1];
+					my_i[i] = my_i[i - 1];
+				}
+				mx_i[0] = mx;
+				my_i[0] = my;
 
-		if (dist2[my - 1][mx] > max2) {
-			max2 = dist2[my - 1][mx];
-			j = 1;
+				j_count = 0;
+			}
 		}
-		if (dist2[my + 1][mx] > max2) {
-			max2 = dist2[my + 1][mx];
-			j = 2;
 
-		}
-
-		if (dist2[my][mx + 1] > max2) {
-			max2 = dist2[my][mx + 1];
-			j = 3;
-
-		}
-
-		if (dist2[my][mx - 1] > max2) {
-			max2 = dist2[my][mx - 1];
-			j = 4;
-		}
-
-		if (j != 0) {
+		//		}
 		
+		if (j == 1) {
 
-			for (int i = 3; i > 0; i--) {
-				dist[my_i[i]][mx_i[i]] = 0;
-				dist_player[my_i[i]][mx_i[i]] = 0;
-			}
-			for (int i = 3; i > 0; i--) {
-				mx_i[i] = mx_i[i - 1];
-				my_i[i] = my_i[i - 1];
-			}
-			mx_i[0] = mx;
-			my_i[0] = my;
-			
-			j_count = 0;
+			fake2_pos.y -= 5;
+			j_count++;
 		}
-	}
+		if (j == 2) {
 
-	//		}
+			fake2_pos.y += 5;
+			j_count++;
+		}
+		if (j == 3) {
+			fake2_pos.x += 5;
+			j_count++;
+		}
 
-	if (j == 1) {
+		if (j == 4) {
 
-		fake2_pos.y -= 5;
-		j_count++;
-	}
-	if (j == 2) {
-
-		fake2_pos.y += 5;
-		j_count++;
-	}
-	if (j == 3) {
-		fake2_pos.x += 5;
-		j_count++;
-	}
-
-	if (j == 4) {
-
-		fake2_pos.x -= 5;
-		j_count++;
-	}
-
+			fake2_pos.x -= 5;
+			j_count++;
+		}
+	
 	// 鬼とデコイの当たり判定
 	if ((oni_pos.x + 35 < fake2_pos.x + 15 || oni_pos.x + 15 > fake2_pos.x + 35 ||
 		oni_pos.y + 40 < fake2_pos.y + 10 || oni_pos.y + 10 > fake2_pos.y + 40)){
@@ -983,13 +978,15 @@ void GameMain::Draw()
 	for (int y = 0; y < 18; y++) {
 		for (int x = 0; x < 32; x++) {
 			if (map_data_b[y][x] == '#') {
-				SpriteBatch.Draw(*wall, Vector3(x * 50, y * 50, 0), RectWH(0, 0, 50, 50));
+				SpriteBatch.Draw(*bg, Vector3(x * 50, y * 50, 0), RectWH(0, 150, 50, 50));
+			}
+			else if (map_data_b[y][x] == '$') {
+
+				SpriteBatch.Draw(*bg, Vector3(x * 50, y * 50, 0), RectWH(0, 500, 50, 50));
 			}
 			else {
 
-				SpriteBatch.Draw(*floar, Vector3(x * 50, y * 50, 0), RectWH(0, 0, 50, 50));
-
-
+				SpriteBatch.Draw(*bg, Vector3(x * 50, y * 50, 0), RectWH(0, 50, 50, 50));
 			}
 		}
 	}
@@ -1018,8 +1015,8 @@ void GameMain::Draw()
 
 	}*/
 
-	SpriteBatch.DrawString(DefaultFont, Vector2(960, 0),
-		Color(0, 0, 255), _T("TIME:%d"), time);
+	/*SpriteBatch.DrawString(DefaultFont, Vector2(960, 0),
+		Color(0, 0, 255), _T("TIME:%d"), time);*/
 	
 
 	if (skill_state == true)
