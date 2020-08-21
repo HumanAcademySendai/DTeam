@@ -20,13 +20,13 @@ bool GameMain::Initialize()
 	DefaultFont = GraphicsDevice.CreateDefaultFont();
 	
 	original= GraphicsDevice.CreateSpriteFont(_T("georgia"), 50);
-	time = 120;
+	time = 60;
 	flame = 0;
 
 	//player = GraphicsDevice.CreateSpriteFromFile(_T("Image/Chara.png"));
 	skill = GraphicsDevice.CreateSpriteFromFile(_T("Image/skill.png"));
 
-	player_spd = 7.0f;
+	player_spd = 5.0f;
 	oni_spd = player_spd * 1.2f;
 
 	skill_state = false;
@@ -35,7 +35,10 @@ bool GameMain::Initialize()
 	alpha_flag = false;
 
 	black_flag = false;
-	
+
+	stun_state = false;
+	stun_time = 0;
+
 	InputDevice.CreateGamePad(1);
 
 
@@ -145,6 +148,9 @@ bool GameMain::Initialize()
 	prev_mx = -1;
 	prev_my = -1;
 
+
+	InputDevice.CreateGamePad(2);
+
 	return true;
 }
 
@@ -164,12 +170,15 @@ int GameMain::time = 0;
 void GameMain::ONI()
 {
 	KeyboardState key = Keyboard->GetState();
+	GamePadState pad_1 = GamePad(0)->GetState();
+	GamePadState pad_2 = GamePad(1)->GetState();
 
 	int nx = (int)((oni_pos.x + 50) / 50);
 	int ny = (int)((oni_pos.y + 50) / 50);
 
-	//if (key.IsKeyUp(Keys_A)){
-		if (key.IsKeyDown(Keys_D)) {
+	if (stun_state == false)
+	{
+		if (key.IsKeyDown(Keys_D) || pad_1.Buttons[2] != 0) {
 			oni_pos.x += oni_spd;
 
 			int mx = (int)(oni_pos.x / 50);
@@ -189,20 +198,18 @@ void GameMain::ONI()
 					oni_pos.x = mx * 50;
 			}
 		}
-	//}
 
-	//if (key.IsKeyUp(Keys_D)) {
-		else if (key.IsKeyDown(Keys_A)) {
+		else if (key.IsKeyDown(Keys_A) || pad_1.Buttons[0] != 0) {
 			oni_pos.x -= oni_spd;
 
-				int mx = (int)(oni_pos.x / 50);
-				int my = (int)(oni_pos.y / 50);
+			int mx = (int)(oni_pos.x / 50);
+			int my = (int)(oni_pos.y / 50);
 
-				if (map_data_b[my][mx] == '#')
-					oni_pos.x = (mx + 1) * 50;
+			if (map_data_b[my][mx] == '#')
+				oni_pos.x = (mx + 1) * 50;
 
 
-				int py = (int)oni_pos.y % 50;
+			int py = (int)oni_pos.y % 50;
 			if (py != 0) {
 				if (py < 10)
 					oni_pos.y = ((int)oni_pos.y / 50 + 0) * 50;
@@ -212,10 +219,8 @@ void GameMain::ONI()
 					oni_pos.x = (mx + 1) * 50;
 			}
 		}
-	//}
 
-	//if (key.IsKeyUp(Keys_D) && key.IsKeyUp(Keys_A)) {
-		else if (key.IsKeyDown(Keys_S)) {
+		else if (key.IsKeyDown(Keys_S) || pad_1.Buttons[1] != 0) {
 			oni_pos.y += oni_spd;
 
 			int mx = (int)(oni_pos.x / 50);
@@ -235,10 +240,8 @@ void GameMain::ONI()
 					oni_pos.y = my * 50;
 			}
 		}
-	//}
 
-	//if (key.IsKeyUp(Keys_D) && key.IsKeyUp(Keys_A)) {
-		else if (key.IsKeyDown(Keys_W)) {
+		else if (key.IsKeyDown(Keys_W) || pad_1.Buttons[3] != 0) {
 			oni_pos.y -= oni_spd;
 
 			int mx = (int)(oni_pos.x / 50);
@@ -258,6 +261,7 @@ void GameMain::ONI()
 					oni_pos.y = (my + 1) * 50;
 			}
 		}
+	}
 
 
 		int mx = oni_pos.x / 50;
@@ -298,7 +302,6 @@ void GameMain::ONI()
 			prev_mx = mx;
 			prev_my = my;
 		}
-	//}
 }
 
 void GameMain::kabe()
@@ -335,8 +338,11 @@ int GameMain::Update()
 void GameMain::Player()
 {
 	KeyboardState key = Keyboard->GetState();
+	KeyboardBuffer key_buffer = Keyboard->GetBuffer();
+	GamePadState pad_2 = GamePad(1)->GetState();
+	GamePadBuffer pad_buffer = GamePad(1)->GetBuffer();
 
-	if (key.IsKeyDown(Keys_Right)) {
+	if (key.IsKeyDown(Keys_Right) || pad_2.Buttons[2] != 0) {
 		player_pos.x += player_spd;
 
 		int mx = (int)(player_pos.x / 50);
@@ -358,7 +364,7 @@ void GameMain::Player()
 	}
 		
 
-	else if (key.IsKeyDown(Keys_Left)) {
+	else if (key.IsKeyDown(Keys_Left) || pad_2.Buttons[0] != 0) {
 		player_pos.x -= player_spd;
 
 		int mx = (int)(player_pos.x / 50);
@@ -379,7 +385,7 @@ void GameMain::Player()
 		}
 	}
 
-		else if (key.IsKeyDown(Keys_Down)) {
+		else if (key.IsKeyDown(Keys_Down) || pad_2.Buttons[1] != 0) {
 			player_pos.y += player_spd;
 
 
@@ -402,7 +408,7 @@ void GameMain::Player()
 			}
 		}
 
-		else if (key.IsKeyDown(Keys_Up)) {
+		else if (key.IsKeyDown(Keys_Up) || pad_2.Buttons[3] != 0) {
 		player_pos.y -= player_spd;
 
 
@@ -425,6 +431,42 @@ void GameMain::Player()
 				player_pos.y = (my + 1) * 50;
 		}
 	}
+
+
+	if (black_flag == false)
+	{
+		if (key_buffer.IsPressed(Keys_Space) || pad_buffer.IsPressed(GamePad_Button6))
+		{
+			skill_state = true;
+			alpha_flag = true;
+			black_flag = true;
+		}
+	}
+
+	if (skill_state == true)
+	{
+		skill_time += 1.0f;
+
+		if (skill_time > 60.0f)
+		{
+			skill_alpha -= 0.008f;
+		}
+
+		if (skill_alpha < 0.0f)
+		{
+			skill_state = false;
+			skill_time = 0.0f;
+			skill_alpha = 1.0f;
+		}
+	}
+
+	else if (skill_time < 0)
+	{
+		skill_state = false;
+		skill_time = 0.0f;
+		alpha_flag = false;
+		skill_alpha = 1.0f;
+	}
 }
 
 void GameMain::Fake()
@@ -443,7 +485,7 @@ void GameMain::Fake()
 	
 		if (k_count == 10) {
 
-
+			k = 0;
 
 
 			if (dist[my - 1][mx] > max) {
@@ -467,11 +509,11 @@ void GameMain::Fake()
 				k = 4;
 			}
 
-			if (k != 0)
+			if (k != 0) {
 				dist[my][mx] = 0;
-
-			k_count = 0;
-		}
+				k_count = 0;
+			}
+			}
 	
 	//		}
 
@@ -513,8 +555,24 @@ void GameMain::Fake()
 	}*/
 
 
+	// ‹S‚ÆƒfƒRƒC‚Ì“–‚½‚è”»’è
+	if ((oni_pos.x + 35 < fake_pos.x + 15 || oni_pos.x + 15 > fake_pos.x + 35 ||
+		oni_pos.y + 40 < fake_pos.y + 10 || oni_pos.y + 10 > fake_pos.y + 40)){
+	}
+	else if (time >= 0){
 
+		stun_state = true;
+	}
+	if (stun_state == true){
 
+		stun_time += 1.0f;
+
+		if (stun_time >= 120.0f){
+
+			stun_state = false;
+			stun_time = 0.0f;
+		}
+	}
 }
 
 
