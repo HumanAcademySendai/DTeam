@@ -76,8 +76,8 @@ private:
 
 	
 	SPRITE player;
-	SPRITE player1;
-	SPRITE player2;
+	SPRITE fake;
+	
 
 
 	Vector3 player_pos;

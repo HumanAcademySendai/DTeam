@@ -21,8 +21,7 @@ bool GameMain::Initialize()
 	bgm->Play();
 
 	player = GraphicsDevice.CreateSpriteFromFile(_T("akuma.png"));
-	player1 = GraphicsDevice.CreateSpriteFromFile(_T("akuma2.png"));
-	player2 = GraphicsDevice.CreateSpriteFromFile(_T("akuma3.png"));
+	fake = GraphicsDevice.CreateSpriteFromFile(_T("akuma2.png"));
 
 
 	time = 60;
@@ -124,8 +123,8 @@ void GameMain::Draw()
 		Color(0, 0, 255), _T("TIME:%d"), time);
 
 	SpriteBatch.Draw(*player, player_pos);
-	SpriteBatch.Draw(*player1, fake_pos);
-	SpriteBatch.Draw(*player2, fake2_pos);
+	SpriteBatch.Draw(*fake, fake_pos);
+	
 
 
 	SpriteBatch.End();
