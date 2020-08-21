@@ -44,7 +44,9 @@ bool GameMain::Initialize()
 	skill_state = false;
 	skill_time = 0.0f;
 	skill_alpha = 1.0f;
+	oni_alpha = 1.0f;
 	alpha_flag = false;
+	fake_flag = false;
 
 	black_flag = false;
 
@@ -242,6 +244,24 @@ int GameMain::Update()
 	AI();
 	Fake();
 	Fake2();
+
+	if (stun_state == true) {
+		if (fake_flag = true && oni_alpha >= 255) {
+			fake_flag = false;
+		}
+		if (fake_flag = false && oni_alpha <= 0) {
+			fake_flag = true;
+		}
+		if (fake_flag) {
+			oni_alpha += 20;
+		}
+		else {
+			oni_alpha -= 20;
+		}
+	}
+	else {
+		oni_alpha = 1.0f;
+	}
 
 	flame++;
 	if (flame == 60) {
@@ -991,7 +1011,7 @@ void GameMain::Draw()
 		}
 	}
 
-	SpriteBatch.Draw(*oni, oni_pos);
+	SpriteBatch.Draw(*oni, oni_pos,oni_alpha);
 
 
 	SpriteBatch.Draw(*player, fake_pos);

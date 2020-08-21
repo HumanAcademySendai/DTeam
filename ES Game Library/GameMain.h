@@ -82,11 +82,13 @@ private:
 	float skill_time;
 	float skill_alpha;
 	bool alpha_flag;
+	bool fake_flag;
 
 	bool black_flag;
 
 	SPRITE oni;
 	Vector3 oni_pos;
+	float oni_alpha;
 	float oni_spd;
 	float stun_time;
 	bool stun_state;
