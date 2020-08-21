@@ -118,8 +118,8 @@ private:
 	int mm[408];
 	
 
-	int mx_k[3],my_k[3];
-	int mx_i[3], my_i[3];
+	int mx_k[4],my_k[4];
+	int mx_i[4], my_i[4];
 
 	int prev_mx, prev_my;
 	int prev_mx2, prev_my2;

@@ -126,7 +126,7 @@ bool GameMain::Initialize()
 		}
 	}
 
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 4; i++) {
 		mx_k[i] = 0;
 		my_k[i] = 0;
 		mx_i[i] = 0;
@@ -336,6 +336,8 @@ void GameMain::ONI()
 					}
 					else {
 						dist[y][x] = -1;
+
+						
 					}
 				}
 			}
@@ -350,8 +352,19 @@ void GameMain::ONI()
 				}
 			}
 
+	
+
 			prev_mx = mx;
 			prev_my = my;
+		}
+
+		for (int i = 3; i > 0; i--) {
+			dist[my_k[i]][mx_k[i]] = 0;
+			dist_player[my_k[i]][mx_k[i]] = 0;
+		}
+		for (int i = 3; i > 0; i--) {
+			mx_k[i] = mx_k[i - 1];
+			my_k[i] = my_k[i - 1];
 		}
 
 
@@ -506,7 +519,6 @@ void GameMain::Player()
 				}
 				else {
 					dist_player[y][x] = -1;
-
 				}
 			}
 		}
@@ -521,8 +533,20 @@ void GameMain::Player()
 			}
 		}
 
+	
+		
+
 		prev_mx2 = mx;
 		prev_my2 = my;
+	}
+
+	for (int i = 3; i > 0; i--) {
+		dist[my_i[i]][mx_i[i]] = 0;
+		dist_player[my_i[i]][mx_i[i]] = 0;
+	}
+	for (int i = 3; i > 0; i--) {
+		mx_i[i] = mx_i[i - 1];
+		my_i[i] = my_i[i - 1];
 	}
 
 }
@@ -541,49 +565,51 @@ void GameMain::Fake()
 	float max = 0;
 	
 	
-		if (k_count == 10) {
+	if (k_count == 10) {
 
-			k = 0;
+		k = 0;
 
-			if (dist_AI[my - 1][mx] > max) {
-				max = dist_AI[my - 1][mx];
-				k = 1;
-			}
-			if (dist_AI[my + 1][mx] > max) {
-				max = dist_AI[my + 1][mx];
-				k = 2;
-
-			}
-
-			if (dist_AI[my][mx + 1] > max) {
-				max = dist_AI[my][mx + 1];
-				k = 3;
-
-			}
-
-			if (dist_AI[my][mx - 1] > max) {
-				max = dist_AI[my][mx - 1];
-				k = 4;
-			}
-
-			if (k != 0) {
-
-				
-				for (int i = 2; i > 0; i--) {
-					dist[my_k[i]][mx_k[i]] = 0;
-					dist_player[my_k[i]][mx_k[i]] = 0;
-					mx_k[i] = mx_k[i - 1];
-					my_k[i] = my_k[i - 1];
-
-				}
-
-				mx_k[0] = 0;
-				my_k[0] = 0;
-
-				
-				k_count = 0;
-			}
+		if (dist_AI[my - 1][mx] > max) {
+			max = dist_AI[my - 1][mx];
+			k = 1;
 		}
+		if (dist_AI[my + 1][mx] > max) {
+			max = dist_AI[my + 1][mx];
+			k = 2;
+
+		}
+
+		if (dist_AI[my][mx + 1] > max) {
+			max = dist_AI[my][mx + 1];
+			k = 3;
+
+		}
+
+		if (dist_AI[my][mx - 1] > max) {
+			max = dist_AI[my][mx - 1];
+			k = 4;
+		}
+
+		if (k != 0) {
+
+				
+			for (int i = 3; i > 0; i--) {
+				dist[my_k[i]][mx_k[i]] = 0;
+				dist_player[my_k[i]][mx_k[i]] = 0;
+			}
+			for (int i = 3; i > 0; i--) {
+				mx_k[i] = mx_k[i - 1];
+				my_k[i] = my_k[i - 1];
+			}
+
+
+			mx_k[0] = mx;
+			my_k[0] = my;
+
+				
+			k_count = 0;
+		}
+	}
 	
 	
 
@@ -668,16 +694,18 @@ void GameMain::Fake2() {
 		}
 
 		if (j != 0) {
-			for (int i = 2; i > 0; i--) {
+		
+
+			for (int i = 3; i > 0; i--) {
 				dist[my_i[i]][mx_i[i]] = 0;
 				dist_player[my_i[i]][mx_i[i]] = 0;
+			}
+			for (int i = 3; i > 0; i--) {
 				mx_i[i] = mx_i[i - 1];
 				my_i[i] = my_i[i - 1];
-
 			}
-
-			mx_i[0] = 0;
-			my_i[0] = 0;
+			mx_i[0] = mx;
+			my_i[0] = my;
 			
 			j_count = 0;
 		}
@@ -712,7 +740,7 @@ void GameMain::AI()
 	for (int y = 0; y < 18; y++) {
 		for (int x = 0; x < map_data_b[y].size(); x++) {
 			if (dist2[y][x] >= 0)
-				dist2[y][x] = dist_player[y][x] * 0.3 + dist[y][x] * 0.7;
+				dist2[y][x] = dist_player[y][x] * 0.4 + dist[y][x] * 0.6;
 			else
 				dist2[y][x] = 0;
 		}
@@ -771,7 +799,7 @@ void GameMain::Draw()
 
 	for (int y = 0; y < 18; y++) {
 		for (int x = 0; x < dist[y].size(); x++) {
-			SpriteBatch.DrawString(DefaultFont, Vector2(x * 48, y * 16), Color(0, 0, 0), _T("%01.3f"), dist2[y][x]);
+			SpriteBatch.DrawString(DefaultFont, Vector2(x * 48, y * 16), Color(0, 0, 0), _T("%01.3f"), dist_AI[y][x]);
 		}
 	}
 
