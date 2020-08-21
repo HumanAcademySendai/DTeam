@@ -83,8 +83,11 @@ private:
 	float skill_alpha;
 	bool alpha_flag;
 	bool fake_flag;
-
+	int abc;
 	bool black_flag;
+	float invisible_state;
+	float invisible_time;
+	float invisible_alpha;
 
 	SPRITE oni;
 	Vector3 oni_pos;

@@ -47,6 +47,10 @@ bool GameMain::Initialize()
 	oni_alpha = 1.0f;
 	alpha_flag = false;
 	fake_flag = false;
+	abc = 0;
+	invisible_state = 0;
+	invisible_time = 0;
+	invisible_alpha = 1.0f;
 
 	black_flag = false;
 
@@ -652,7 +656,7 @@ void GameMain::Player()
 		}
 	}
 
-
+	//ˆÃ“]‰»
 	if (black_flag == false)
 	{
 		if (key_buffer.IsPressed(Keys_Space) || pad_buffer.IsPressed(GamePad_Button6))
@@ -687,8 +691,40 @@ void GameMain::Player()
 		alpha_flag = false;
 		skill_alpha = 1.0f;
 	}
-	
 
+	//“§–¾‰»
+	if (abc == 0)
+	{
+
+		if (invisible_state == false)
+		{
+			if (key_buffer.IsPressed(Keys_Q) || pad_buffer.IsPressed(GamePad_Button5))
+			{
+				abc = 1;
+				invisible_state = true;
+			}
+		}
+	}
+
+
+	if (invisible_state == true)
+	{
+		invisible_time += 1.0f;
+		invisible_alpha += 20.0f;
+
+		if (invisible_time >= 120.0f)
+		{
+			invisible_state = false;
+			invisible_alpha = 1.0f;
+			invisible_time = 0.0f;
+		}
+
+	}
+	if (invisible_alpha >= 255.0f) {
+		invisible_alpha = 255.0f;
+	}
+	
+	//ƒ}ƒbƒv
 	int mx = player_pos.x / 50;
 	int my = player_pos.y / 50;
 
@@ -1013,10 +1049,10 @@ void GameMain::Draw()
 
 	SpriteBatch.Draw(*oni, oni_pos,oni_alpha);
 
-
-	SpriteBatch.Draw(*player, fake_pos);
-	SpriteBatch.Draw(*player, fake2_pos);
-	SpriteBatch.Draw(*player, player_pos);
+	
+		SpriteBatch.Draw(*player, fake_pos,invisible_alpha);
+		SpriteBatch.Draw(*player, fake2_pos, invisible_alpha);
+		SpriteBatch.Draw(*player, player_pos, invisible_alpha);
 
 	/*for (int y = 0; y < 18; y++) {
 		for (int x = 0; x < dist[y].size(); x++) {
