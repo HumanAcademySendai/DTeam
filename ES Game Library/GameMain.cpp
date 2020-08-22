@@ -69,8 +69,9 @@ bool GameMain::Initialize()
 
 	
 
-	player = GraphicsDevice.CreateSpriteFromFile(_T("player.png"));
+	player = GraphicsDevice.CreateSpriteFromFile(_T("player2.png"));
 
+	anime = 0;
 	oni = GraphicsDevice.CreateSpriteFromFile(_T("oni.png"));
 
 	map_data_b[0] =  ("################################");
@@ -286,7 +287,11 @@ int GameMain::Update()
 	{
 		return GAME_SCENE(new resultScene);
 	}
+	anime += 0.2f;
 
+	if (anime > 10) {
+		anime = 0;
+	}
 
 	return 0;
 }
@@ -1052,7 +1057,7 @@ void GameMain::Draw()
 	
 		SpriteBatch.Draw(*player, fake_pos,invisible_alpha);
 		SpriteBatch.Draw(*player, fake2_pos, invisible_alpha);
-		SpriteBatch.Draw(*player, player_pos, invisible_alpha);
+		SpriteBatch.Draw(*player, Vector3(player_pos.x, player_pos.y-20,0),RectWH((int)anime*50,0,50,70), invisible_alpha);
 
 	/*for (int y = 0; y < 18; y++) {
 		for (int x = 0; x < dist[y].size(); x++) {

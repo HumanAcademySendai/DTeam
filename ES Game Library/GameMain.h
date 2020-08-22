@@ -105,6 +105,7 @@ private:
 	Vector3 fake2_pos;
 	Vector3 player_pos;
 	Color cl;
+	float anime;
 	float speed = 5;
 	int k_count;
 	int k;
