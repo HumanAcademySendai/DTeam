@@ -102,6 +102,7 @@ private:
 	SPRITE fake;
 	SPRITE bg;
 	SPRITE ton;
+	SPRITE down;
 	Vector3 fake_pos;
 	Vector3 fake2_pos;
 	Vector3 player_pos;

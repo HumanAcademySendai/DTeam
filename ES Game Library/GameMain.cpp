@@ -77,13 +77,14 @@ bool GameMain::Initialize()
 
 	fake = GraphicsDevice.CreateSpriteFromFile(_T("fake.png"));
 
+	down = GraphicsDevice.CreateSpriteFromFile(_T("playerdown.png"));
 	
 	direc4 = 0;
 	player = GraphicsDevice.CreateSpriteFromFile(_T("player2.png"));
 
 	anime = 0;
 	direc = 0;
-	oni = GraphicsDevice.CreateSpriteFromFile(_T("oni.png"));
+	oni = GraphicsDevice.CreateSpriteFromFile(_T("oni2.png"));
 
 	map_data_b[0] =  ("################################");
 	map_data_b[1] =  ("#                              #");
@@ -600,7 +601,7 @@ void GameMain::Player()
 	if (randam_skil != 4) {
 		if (key.IsKeyDown(Keys_Right) || pad2_direction == 6 /* pad_2.X > 0 */) {
 			player_pos.x += player_spd;
-			direc = 2;
+			direc = 1;
 			int mx = (int)(player_pos.x / 50);
 			int my = (int)(player_pos.y / 50);
 
@@ -622,7 +623,7 @@ void GameMain::Player()
 
 		else if (key.IsKeyDown(Keys_Left) || pad2_direction == 4 /* pad_2.X < 0 */) {
 			player_pos.x -= player_spd;
-			direc = 1;
+			direc = 2;
 			int mx = (int)(player_pos.x / 50);
 			int my = (int)(player_pos.y / 50);
 
@@ -947,13 +948,13 @@ void GameMain::Fake()
 		if (k == 3) {
 
 			fake_pos.x += 5;
-			direc2 = 2;
+			direc2 = 1;
 			k_count++;
 		}
 		if (k == 4) {
 
 			fake_pos.x -= 5;
-			direc2 = 1;
+			direc2 = 2;
 			k_count++;
 		}
 	
@@ -1060,14 +1061,14 @@ void GameMain::Fake2() {
 		}
 		if (j == 3) {
 			fake2_pos.x += 5;
-			direc3 = 2;
+			direc3 = 1;
 			j_count++;
 		}
 
 		if (j == 4) {
 
 			fake2_pos.x -= 5;
-			direc3 = 1;
+			direc3 = 2;
 			j_count++;
 		}
 	
