@@ -101,18 +101,29 @@ private:
 	SPRITE floar;
 	SPRITE fake;
 	SPRITE bg;
+	SPRITE ton;
 	Vector3 fake_pos;
 	Vector3 fake2_pos;
 	Vector3 player_pos;
 	Color cl;
 	float anime;
+	float direc;
+	float direc2;
+	float direc3;
+	float direc4;
+	float randam_skil;
+	float randam[4];
+	float skil_time;
+	int f;
 	float speed = 5;
 	int k_count;
 	int k;
 	int j;
 	int j_count;
+	float punch_state;
 
 	MEDIA bgm;
+	SOUND se;
 
 
 	std::vector<float> dist[18];
