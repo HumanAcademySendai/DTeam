@@ -27,7 +27,7 @@ bool GameMain::Initialize()
 
 
 	bgm = MediaManager.CreateMediaFromFile(_T("bgm.mp3"));
-	bgm->Play();
+	//bgm->Play();
 
 	bg = GraphicsDevice.CreateSpriteFromFile(_T("deza.png"));
 	se = SoundDevice.CreateSoundFromFile(_T("nc86224.wav"));
@@ -41,6 +41,20 @@ bool GameMain::Initialize()
 
 	player_spd = 5.0f;
 	oni_spd = player_spd * 1.2f;
+
+	p_flame_x = 0.0f;
+	p_flame_y = 0.0f;
+	p_walk_flag = 0;
+
+	oni_flame_x = 0.0f;
+	oni_flame_y = 0.0f;
+	punch_state = 0;
+
+	oni_state = 0;
+	win_flame = 0;
+
+	win_time = 0;
+	lose_flame = 0;
 
 	skill_state = false;
 	skill_time = 0.0f;
@@ -85,6 +99,13 @@ bool GameMain::Initialize()
 	anime = 0;
 	direc = 0;
 	oni = GraphicsDevice.CreateSpriteFromFile(_T("oni2.png"));
+	
+	playerwin = GraphicsDevice.CreateSpriteFromFile(_T("playerwin.png"));
+
+	
+	onipunch = GraphicsDevice.CreateSpriteFromFile(_T("punch.png"));
+
+	lose = GraphicsDevice.CreateSpriteFromFile(_T("lose.png"));
 
 	map_data_b[0] =  ("################################");
 	map_data_b[1] =  ("#                              #");
@@ -291,6 +312,31 @@ int GameMain::Update()
 	}
 
 	//鬼と逃げる人の当たり判定
+
+	KeyboardBuffer key_buffer = Keyboard->GetBuffer();
+	GamePadBuffer pad_1_buffer = GamePad(1)->GetBuffer();
+
+
+	
+	if (punch_state == 1)
+	{
+
+		if (player_pos.x + 35 < oni_pos.x + 15 || player_pos.x + 15 > oni_pos.x + 35 ||
+			player_pos.y + 40 < oni_pos.y + 10 || player_pos.y + 10 > oni_pos.y + 40)
+		{
+		}
+		else if (time >= 0)
+		{
+			oni_state = 1;
+		}
+
+	}
+
+	if (win_time >= 180)
+	{
+		return GAME_SCENE(new resultScene);
+	}
+
 
 	
 
@@ -499,6 +545,32 @@ void GameMain::ONI()
 		}
 
 
+		if (oni_state == 1)
+		{
+			win_flame += 0.1f;
+			lose_flame += 0.1f;
+
+			win_time++;
+		}
+
+		if (lose_flame >= 7)
+		{
+			lose_flame = 0;
+		}
+
+		if (win_flame >= 5)
+		{
+			win_flame = 0;
+		}
+
+
+
+
+
+		//KeyboardBuffer key_buffer = Keyboard->GetBuffer();
+
+		
+
 	//}
 		//
 
@@ -645,6 +717,14 @@ void GameMain::Player()
 		else if (key.IsKeyDown(Keys_Down) || pad2_direction == 2/* pad_2.Y > 0 */) {
 			player_pos.y += player_spd;
 			direc = 0;
+
+			// 歩きアニメ
+			p_flame_x += 0.5f;
+			if (p_flame_x >= 5.0f)
+			{
+				p_flame_x = 0.0f;
+			}
+
 
 			int mx = (int)(player_pos.x / 50);
 			int my = (int)(player_pos.y / 50);
@@ -868,6 +948,36 @@ void GameMain::Player()
 		mx_i[i] = mx_i[i - 1];
 		my_i[i] = my_i[i - 1];
 	}
+
+
+
+	// パンチ
+	if (key_buffer.IsPressed(Keys_M))
+	{
+		punch_state = 1;
+	}
+
+	if (punch_state == 1)
+	{
+		oni_flame_x += 0.3f;
+	}
+	if (oni_flame_x >= 7)
+	{
+		punch_state = 0;
+		oni_flame_x = 0;
+	}
+
+	
+
+
+
+	// 歩きアニメ
+	/*flame_x += 0.1f;
+	if (flame_x >= 5.0f)
+	{
+		flame_x = 0.0f;
+	}*/
+
 
 }
 
@@ -1154,21 +1264,50 @@ void GameMain::Draw()
 		}
 	}
 
-	SpriteBatch.Draw(*oni, Vector3(oni_pos.x, oni_pos.y - 20, 0), RectWH((int)anime * 50,(int)direc4 * 70, 50, 70),oni_alpha);
-
+	//SpriteBatch.Draw(*oni, oni_pos,oni_alpha);
+	if (punch_state == 1)
+	{
+		SpriteBatch.Draw(*onipunch,oni_pos, RectWH(50 * (int)oni_flame_x, 70 * (int)oni_flame_y, 50, 70), oni_alpha);
+	}
+	else if (oni_state == 1)
+	{
+		SpriteBatch.Draw(*playerwin, oni_pos, RectWH(50 * (int)win_flame, 0, 50, 70), oni_alpha);
+	}
+	else
+	{
+		SpriteBatch.Draw(*oni, oni_pos, oni_alpha);
+	}
 	
-	SpriteBatch.Draw(*player, Vector3(fake_pos.x,fake_pos.y-20,0), RectWH((int)anime * 50, (int)direc2 * 70, 50, 70),invisible_alpha);
-	SpriteBatch.Draw(*player, Vector3(fake2_pos.x, fake2_pos.y - 20, 0), RectWH((int)anime * 50, (int)direc3 * 70, 50, 70),invisible_alpha);
-	SpriteBatch.Draw(*player, Vector3(player_pos.x, player_pos.y-20,0),RectWH((int)anime*50,(int)direc*70,50,70), invisible_alpha);
-	for (int x = 14; x < 17; x++){
-		for(int y =5; y < 14;y++)
-		SpriteBatch.Draw(*ton, Vector3(50*x, 50*y, -1), RectWH(0, 0, 50, 50));
+
+	//SpriteBatch.Draw(*onipunch, Vector3(0, 0, 0), RectWH(50 * (int)oni_flame_x, 70 * (int)oni_flame_y, 50, 70), oni_alpha);
+
+	if (oni_state == 1)
+	{
+		SpriteBatch.Draw(*lose, player_pos, RectWH(50 * (int)lose_flame, 0, 50, 70), invisible_alpha);
 	}
-	for (int x = 11; x < 20; x++) {
-		for (int y = 8; y < 11; y++) {
-			SpriteBatch.Draw(*ton, Vector3(50 * x, 50 * y, -1), RectWH(0, 0, 50, 50));
-		}
+	else
+	{
+		SpriteBatch.Draw(*player, player_pos, RectWH(0, 0, 50, 70), invisible_alpha);
 	}
+
+		SpriteBatch.Draw(*player, fake_pos, invisible_alpha);
+		SpriteBatch.Draw(*player, fake2_pos, invisible_alpha);
+	/*if (p_walk_flag == 0)
+	{
+		SpriteBatch.Draw(*player, player_pos, invisible_alpha);
+	}
+
+	if (p_walk_flag == 1)
+	{
+		SpriteBatch.Draw(*playerwalk, player_pos, RectWH(50 * (int)p_flame_x, 210 * (int)p_flame_y, 50, 70), invisible_alpha);
+	}
+	if (p_walk_flag == 2)
+	{
+		SpriteBatch.Draw(*playerwalk, player_pos, RectWH(50 * (int)p_flame_x, 140 * (int)p_flame_y, 50, 70), invisible_alpha);
+	}*/
+
+
+
 	/*for (int y = 0; y < 18; y++) {
 		for (int x = 0; x < dist[y].size(); x++) {
 			SpriteBatch.DrawString(DefaultFont, Vector2(x * 48, y * 16), Color(0, 0, 0), _T("%01.3f"), dist_AI[y][x]);

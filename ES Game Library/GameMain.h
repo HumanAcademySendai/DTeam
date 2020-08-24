@@ -77,6 +77,11 @@ private:
 	SPRITE player;
 	float player_spd;
 
+	SPRITE playerwalk;
+	SPRITE playerwin;
+	float p_flame_x,p_flame_y;
+	int p_walk_flag;
+
 	SPRITE skill;
 	bool skill_state;
 	float skill_time;
@@ -95,6 +100,17 @@ private:
 	float oni_spd;
 	float stun_time;
 	bool stun_state;
+
+	SPRITE onipunch;
+	float oni_flame_x, oni_flame_y;
+	float punch_state;
+
+	int oni_state;
+	float win_flame;
+	float win_time;
+
+	SPRITE lose;
+	float lose_flame;
 
 	// ä÷êîêÈåæ
 	SPRITE wall;
