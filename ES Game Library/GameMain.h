@@ -115,6 +115,7 @@ private:
 	float randam_skil;
 	float randam[4];
 	float skil_time;
+	float ‰z‘O;
 	int f;
 	float speed = 5;
 	int k_count;

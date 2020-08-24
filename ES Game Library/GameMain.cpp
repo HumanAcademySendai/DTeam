@@ -56,7 +56,7 @@ bool GameMain::Initialize()
 	skil_time = 300;
 	f = 0;
 	black_flag = false;
-
+	‰z‘O = 0;
 
 	punch_state = 0;
 	stun_state = false;
@@ -800,16 +800,19 @@ void GameMain::Player()
 		}
 	}
 
-	//‰z‘O
+	
+	//ƒXƒ^ƒ“
 	if (randam_skil == 4) {
-		se->Play();
+		‰z‘O = 1;
 		if (skil_time >= 120) {
 			randam_skil = 5;
 		}
 		
 	}
-	//ƒXƒ^ƒ“
-	
+	//‰z‘O
+	if (‰z‘O == 1) {
+		se->Play();
+	}
 	
 	
 	
@@ -1151,12 +1154,12 @@ void GameMain::Draw()
 		}
 	}
 
-	SpriteBatch.Draw(*oni, Vector3(oni_pos.x, oni_pos.y - 20, 0), RectWH((int)anime * 50,(int)direc4 * 70, 50, 70),oni_alpha);
+	/*SpriteBatch.Draw(*oni, Vector3(oni_pos.x, oni_pos.y - 20, 0), RectWH((int)anime * 50,(int)direc4 * 70, 50, 70),oni_alpha);
 
 	
 	SpriteBatch.Draw(*player, Vector3(fake_pos.x,fake_pos.y-20,0), RectWH((int)anime * 50, (int)direc2 * 70, 50, 70),invisible_alpha);
 	SpriteBatch.Draw(*player, Vector3(fake2_pos.x, fake2_pos.y - 20, 0), RectWH((int)anime * 50, (int)direc3 * 70, 50, 70),invisible_alpha);
-	SpriteBatch.Draw(*player, Vector3(player_pos.x, player_pos.y-20,0),RectWH((int)anime*50,(int)direc*70,50,70), invisible_alpha);
+	SpriteBatch.Draw(*player, Vector3(player_pos.x, player_pos.y-20,0),RectWH((int)anime*50,(int)direc*70,50,70), invisible_alpha);*/
 	for (int x = 14; x < 17; x++){
 		for(int y =5; y < 14;y++)
 		SpriteBatch.Draw(*ton, Vector3(50*x, 50*y, -1), RectWH(0, 0, 50, 50));
