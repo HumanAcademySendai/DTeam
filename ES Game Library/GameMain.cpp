@@ -22,12 +22,12 @@ bool GameMain::Initialize()
 	//int cells[MAZE_WIDTH][MAZE_HEIGHT];
 
 	DefaultFont = GraphicsDevice.CreateDefaultFont();
-	
+
 	MediaManager.Attach(GraphicsDevice);
 
 
 	bgm = MediaManager.CreateMediaFromFile(_T("bgm.mp3"));
-	//bgm->Play();
+	bgm->Play();
 
 	bg = GraphicsDevice.CreateSpriteFromFile(_T("deza.png"));
 	se = SoundDevice.CreateSoundFromFile(_T("nc86224.wav"));
@@ -58,8 +58,9 @@ bool GameMain::Initialize()
 	lose_flame = 0;
 
 	down_flame = 0;
+	player_count = 0;
 
-	skill_state = false;
+	skill_state = true;
 	skill_time = 0.0f;
 	skill_alpha = 1.0f;
 	oni_alpha = 1.0f;
@@ -96,7 +97,7 @@ bool GameMain::Initialize()
 	fake = GraphicsDevice.CreateSpriteFromFile(_T("fake.png"));
 
 	down = GraphicsDevice.CreateSpriteFromFile(_T("playerdown.png"));
-	
+
 	direc4 = 0;
 	player = GraphicsDevice.CreateSpriteFromFile(_T("player2.png"));
 
@@ -105,24 +106,24 @@ bool GameMain::Initialize()
 	oni = GraphicsDevice.CreateSpriteFromFile(_T("oni2.png"));
 
 	oniwin = GraphicsDevice.CreateSpriteFromFile(_T("oniwin.png"));
-	
+
 	playerwin = GraphicsDevice.CreateSpriteFromFile(_T("playerwin.png"));
 
-	
+
 	onipunch = GraphicsDevice.CreateSpriteFromFile(_T("punch.png"));
 
 	lose = GraphicsDevice.CreateSpriteFromFile(_T("lose.png"));
 
-	map_data_b[0] =  ("################################");
-	map_data_b[1] =  ("#                              #");
-	map_data_b[2] =  ("#    $$           $$   $$  $$  #");
-	map_data_b[3] =  ("#    $$           $$           #");
-	map_data_b[4] =  ("#    $$                        #");
-	map_data_b[5] =  ("#            $   $       $$$$  #");
-	map_data_b[6] =  ("#            $   $             #");
-	map_data_b[7] =  ("#          $$$   $$$           #");
-	map_data_b[8] =  ("#                        $$$$  #");
-	map_data_b[9] =  ("#                              #");
+	map_data_b[0] = ("################################");
+	map_data_b[1] = ("#                              #");
+	map_data_b[2] = ("#    $$           $$   $$  $$  #");
+	map_data_b[3] = ("#    $$           $$           #");
+	map_data_b[4] = ("#    $$                        #");
+	map_data_b[5] = ("#            $   $       $$$$  #");
+	map_data_b[6] = ("#            $   $             #");
+	map_data_b[7] = ("#          $$$   $$$           #");
+	map_data_b[8] = ("#                        $$$$  #");
+	map_data_b[9] = ("#                              #");
 	map_data_b[10] = ("#                              #");
 	map_data_b[11] = ("#          $$$   $$$           #");
 	map_data_b[12] = ("#            $   $             #");
@@ -161,10 +162,10 @@ bool GameMain::Initialize()
 	}*/
 
 
-	
+
 
 	oni_pos = Vector3(1500, 800, 0);
-	
+
 
 	/*fake_pos = Vector3(50, 50, 0);
 	for (int y = 0; y < 18; y++) {
@@ -319,17 +320,17 @@ int GameMain::Update()
 		}
 	}
 
-	if (lose_time>=180) {
+	if (lose_time >= 180) {
 		return GAME_SCENE(new clearScene);
 	}
-	
+
 	//鬼と逃げる人の当たり判定
 
 	KeyboardBuffer key_buffer = Keyboard->GetBuffer();
 	GamePadBuffer pad_1_buffer = GamePad(1)->GetBuffer();
 
 
-	
+
 	if (punch_state == 1)
 	{
 		if (invisible_state == false) {
@@ -352,7 +353,7 @@ int GameMain::Update()
 	}
 
 
-	
+
 
 
 
@@ -366,7 +367,7 @@ int GameMain::Update()
 			return GAME_SCENE(new resultScene);
 		}
 	}*/
-	
+
 	if (oni_state == 0) {
 		anime += 0.2f;
 	}
@@ -412,20 +413,21 @@ void GameMain::ONI()
 	int nx = (int)((oni_pos.x + 50) / 50);
 	int ny = (int)((oni_pos.y + 50) / 50);
 
-	if (stun_state == false){
+	if (stun_state == false) {
 		if (oni_state == 0) {
 			if (key.IsKeyDown(Keys_D) || pad_direction == 6) {
 				oni_pos.x += oni_spd;
-					direc4 = 2;
-
-					int mx = (int)(oni_pos.x / 50);
-					int my = (int)(oni_pos.y / 50);
-
-					if (map_data_b[my][mx + 1] != ' ')
-						oni_pos.x = mx * 50;
+				direc4 = 2;
 
 
-					int py = (int)oni_pos.y % 50;
+				int mx = (int)(oni_pos.x / 50);
+				int my = (int)(oni_pos.y / 50);
+
+				if (map_data_b[my][mx + 1] != ' ')
+					oni_pos.x = mx * 50;
+
+
+				int py = (int)oni_pos.y % 50;
 				if (py != 0) {
 					if (py < 10)
 						oni_pos.y = ((int)oni_pos.y / 50 + 0) * 50;
@@ -441,6 +443,7 @@ void GameMain::ONI()
 			else if (key.IsKeyDown(Keys_A) || pad_direction == 4) {
 				oni_pos.x -= oni_spd;
 				direc4 = 1;
+
 
 				int mx = (int)(oni_pos.x / 50);
 				int my = (int)(oni_pos.y / 50);
@@ -464,6 +467,7 @@ void GameMain::ONI()
 				oni_pos.y += oni_spd;
 				direc4 = 0;
 
+
 				int mx = (int)(oni_pos.x / 50);
 				int my = (int)(oni_pos.y / 50);
 
@@ -486,6 +490,7 @@ void GameMain::ONI()
 				oni_pos.y -= oni_spd;
 				direc4 = 3;
 
+
 				int mx = (int)(oni_pos.x / 50);
 				int my = (int)(oni_pos.y / 50);
 
@@ -506,110 +511,111 @@ void GameMain::ONI()
 		}
 	}
 
-	
-
-
-		int mx = (int)(oni_pos.x / 50);
-		int my = (int)(oni_pos.y / 50);
-		//脅威マップ
-		if (mx != prev_mx || my != prev_my) {
-			max = FLT_MIN;
-			min = FLT_MAX;
-			for (int y = 0; y < 18; y++) {
-				for (int x = 0; x < map_data_b[y].size(); x++) {
-					if (map_data_b[y][x] == ' ') {
-						dist[y][x] = Vector3_Distance(oni_pos, Vector3(x * 50, y * 50, 0));
-
-						if (max < dist[y][x])
-						{
-							max = dist[y][x];
-						}
-						if (min > dist[y][x])
-						{
-							min = dist[y][x];
-						}
-					}
-					else {
-						dist[y][x] = -1;
-
-
-					}
-				}
-			}
-
-			normal = max - min;
-			for (int y = 0; y < 18; y++) {
-				for (int x = 0; x < map_data_b[y].size(); x++) {
-					if (dist[y][x] >= 0)
-						dist[y][x] = ((dist[y][x] - min) / normal);
-					else
-						dist[y][x] = 0;
-				}
-			}
-
-
-
-			prev_mx = mx;
-			prev_my = my;
-		}
-
-
-		for (int i = 3; i > 0; i--) {
-			dist[my_k[i]][mx_k[i]] = 0;
-			dist_player[my_k[i]][mx_k[i]] = 0;
-		}
-		for (int i = 3; i > 0; i--) {
-			mx_k[i] = mx_k[i - 1];
-			my_k[i] = my_k[i - 1];
-		}
-
-
-		if (oni_state == 1)
-		{
-			win_flame += 0.1f;
-			down_flame += 0.1;
-			win_time++;
-		}
-
-		if (lose_flame > 6)
-		{
-			lose_flame = 0;
-		}
-
-		if (win_flame >= 4)
-		{
-			win_flame = 0;
-		}
-
-		if (oni_state == 2) {
-			win_flame += 0.1f;
-			lose_flame += 0.1f;
-			lose_time++;
-		}
-		
 
 
 
 
-		//KeyboardBuffer key_buffer = Keyboard->GetBuffer();
-
-		
-
-	//}
-		//
-
-
-
-		
-
-		/*for (int y = 0; y < 18; y++) {
+	int mx = (int)(oni_pos.x / 50);
+	int my = (int)(oni_pos.y / 50);
+	//脅威マップ
+	if (mx != prev_mx || my != prev_my) {
+		max = FLT_MIN;
+		min = FLT_MAX;
+		for (int y = 0; y < 18; y++) {
 			for (int x = 0; x < map_data_b[y].size(); x++) {
-				if (dist2[y][x] >= 0)
-					dist2[y][x] = dist_player[y][x] * 0.4 + dist[y][x] * 0.6;
-				else
-					dist2[y][x] = 0;
+				if (map_data_b[y][x] == ' ') {
+					dist[y][x] = Vector3_Distance(oni_pos, Vector3(x * 50, y * 50, 0));
+
+					if (max < dist[y][x])
+					{
+						max = dist[y][x];
+					}
+					if (min > dist[y][x])
+					{
+						min = dist[y][x];
+					}
+				}
+				else {
+					dist[y][x] = -1;
+
+
+				}
 			}
-		}*/
+		}
+
+		normal = max - min;
+		for (int y = 0; y < 18; y++) {
+			for (int x = 0; x < map_data_b[y].size(); x++) {
+				if (dist[y][x] >= 0)
+					dist[y][x] = ((dist[y][x] - min) / normal);
+				else
+					dist[y][x] = 0;
+			}
+		}
+
+
+
+		prev_mx = mx;
+		prev_my = my;
+	}
+
+
+	for (int i = 3; i > 0; i--) {
+		dist[my_k[i]][mx_k[i]] = 0;
+		dist_player[my_k[i]][mx_k[i]] = 0;
+	}
+	for (int i = 3; i > 0; i--) {
+		mx_k[i] = mx_k[i - 1];
+		my_k[i] = my_k[i - 1];
+	}
+
+
+	if (oni_state == 1)
+	{
+		win_flame += 0.1f;
+		down_flame += 0.1;
+		win_time++;
+	}
+
+	if (lose_flame > 6)
+	{
+		lose_flame = 0;
+	}
+
+	if (win_flame >= 4)
+	{
+		win_flame = 0;
+	}
+
+	if (oni_state == 2) {
+		win_flame += 0.1f;
+		lose_flame += 0.1f;
+		lose_time++;
+	}
+
+
+
+
+
+	//KeyboardBuffer key_buffer = Keyboard->GetBuffer();
+
+
+
+//}
+	//
+
+
+
+
+
+	/*for (int y = 0; y < 18; y++) {
+		for (int x = 0; x < map_data_b[y].size(); x++) {
+			if (dist2[y][x] >= 0)
+				dist2[y][x] = dist_player[y][x] * 0.4 + dist[y][x] * 0.6;
+			else
+				dist2[y][x] = 0;
+		}
+	}*/
 
 
 }
@@ -624,22 +630,45 @@ void GameMain::Player()
 	GamePadBuffer pad_buffer = GamePad(1)->GetBuffer();
 	GamePadBuffer pad_buffer2 = GamePad(0)->GetBuffer();
 
-	pad2_direction = 0;
-	if (pad_2.X != 0 || pad_2.Y != 0) {
-		float axis_x = Math_Abs(pad_2.X);
-		float axis_y = Math_Abs(pad_2.Y);
-		if (axis_x > axis_y) {
-			if (pad_2.X > 0)
-				pad2_direction = 6;
-			else if (pad_2.X < 0)
-				pad2_direction = 4;
-		} else {
-			if (pad_2.Y > 0)
-				pad2_direction = 2;
-			else if (pad_2.Y < 0)
-				pad2_direction = 8;
+
+
+	if (pad2_direction == 0) {
+		if (pad_2.X != 0 || pad_2.Y != 0) {
+			int mx = (int)(player_pos.x / 50);
+			int my = (int)(player_pos.y / 50);
+			float axis_x = Math_Abs(pad_2.X);
+			float axis_y = Math_Abs(pad_2.Y);
+			if (axis_x > axis_y) {
+				if (pad_2.X > 0) {
+					if (map_data_b[my][mx + 1] == ' ') {
+						pad2_direction = 6;
+						player_count = 0;
+					}
+				}
+				else if (pad_2.X < 0) {
+					if (map_data_b[my][mx - 1] == ' ') {
+						pad2_direction = 4;
+						player_count = 0;
+					}
+				}
+			}
+			else {
+				if (pad_2.Y > 0) {
+					if (map_data_b[my + 1][mx] == ' ') {
+						pad2_direction = 2;
+						player_count = 0;
+					}
+				}
+				else if (pad_2.Y < 0) {
+					if (map_data_b[my - 1][mx] == ' ') {
+						pad2_direction = 8;
+						player_count = 0;
+					}
+				}
+			}
 		}
 	}
+
 
 	//if (pad_buffer.Buffer[0].DeviceType == GamePad_X) {
 	//	if (pad_buffer.Buffer[0].Data.dwData != 0) {
@@ -695,12 +724,21 @@ void GameMain::Player()
 	//	if (pad2_direction == 2 || pad2_direction == 8)
 	//		pad2_direction = 0;
 	//}
+
+
+
 	if (randam_skil != 4) {
 		if (oni_state == 0) {
 			if (key.IsKeyDown(Keys_Right) || pad2_direction == 6 /* pad_2.X > 0 */) {
 				player_pos.x += player_spd;
 				direc = 1;
-				int mx = (int)(player_pos.x / 50);
+
+				player_count += player_spd;
+
+				if (player_count >= 50) {
+					pad2_direction = 0;
+				}
+				/*int mx = (int)(player_pos.x / 50);
 				int my = (int)(player_pos.y / 50);
 
 				if (map_data_b[my][mx + 1] != ' ')
@@ -714,45 +752,51 @@ void GameMain::Player()
 					else if (py > 40)
 						player_pos.y = ((int)player_pos.y / 50 + 1) * 50;
 					else if (map_data_b[my + 1][mx + 1] != ' ')
-						player_pos.x = mx * 50;
-				}
+						player_pos.x = mx * 50;*/
 			}
 
 
-			else if (key.IsKeyDown(Keys_Left) || pad2_direction == 4 /* pad_2.X < 0 */) {
-				player_pos.x -= player_spd;
-				direc = 2;
-				int mx = (int)(player_pos.x / 50);
-				int my = (int)(player_pos.y / 50);
+		else if (key.IsKeyDown(Keys_Left) || pad2_direction == 4 /* pad_2.X < 0 */) {
+			player_pos.x -= player_spd;
+			direc = 2;
 
-				if (map_data_b[my][mx] != ' ')
-					player_pos.x = (mx + 1) * 50;
+			player_count += player_spd;
+
+			if (player_count >= 50) {
+				pad2_direction = 0;
+			}
+			/*int mx = (int)(player_pos.x / 50);
+			int my = (int)(player_pos.y / 50);
+
+			if (map_data_b[my][mx] != ' ')
+				player_pos.x = (mx + 1) * 50;
 
 
-				int py = (int)player_pos.y % 50;
-				if (py != 0) {
-					if (py < 10)
-						player_pos.y = ((int)player_pos.y / 50 + 0) * 50;
-					else if (py > 40)
-						player_pos.y = ((int)player_pos.y / 50 + 1) * 50;
-					else if (map_data_b[my + 1][mx] != ' ')
-						player_pos.x = (mx + 1) * 50;
-				}
+			int py = (int)player_pos.y % 50;
+			if (py != 0) {
+				if (py < 10)
+					player_pos.y = ((int)player_pos.y / 50 + 0) * 50;
+				else if (py > 40)
+					player_pos.y = ((int)player_pos.y / 50 + 1) * 50;
+				else if (map_data_b[my + 1][mx] != ' ')
+					player_pos.x = (mx + 1) * 50;*/
+					//}
+		}
+
+		else if (key.IsKeyDown(Keys_Down) || pad2_direction == 2/* pad_2.Y > 0 */) {
+			player_pos.y += player_spd;
+			direc = 0;
+
+			player_count += player_spd;
+
+			if (player_count >= 50) {
+				pad2_direction = 0;
 			}
 
-			else if (key.IsKeyDown(Keys_Down) || pad2_direction == 2/* pad_2.Y > 0 */) {
-				player_pos.y += player_spd;
-				direc = 0;
-
-				// 歩きアニメ
-				p_flame_x += 0.5f;
-				if (p_flame_x >= 5.0f)
-				{
-					p_flame_x = 0.0f;
-				}
 
 
-				int mx = (int)(player_pos.x / 50);
+
+			/*	int mx = (int)(player_pos.x / 50);
 				int my = (int)(player_pos.y / 50);
 
 
@@ -768,14 +812,19 @@ void GameMain::Player()
 						player_pos.x = ((int)player_pos.x / 50 + 1) * 50;
 					else if (map_data_b[my + 1][mx + 1] != ' ')
 						player_pos.y = my * 50;
-				}
-			}
+				}*/
+		}
 
-			else if (key.IsKeyDown(Keys_Up) || pad2_direction == 8/* pad_2.Y < 0 */) {
+		else if (key.IsKeyDown(Keys_Up) || pad2_direction == 8/* pad_2.Y < 0 */) {
 				player_pos.y -= player_spd;
 				direc = 3;
 
-				int mx = (int)(player_pos.x / 50);
+				player_count += player_spd;
+
+				if (player_count >= 50) {
+					pad2_direction = 0;
+				}
+				/*int mx = (int)(player_pos.x / 50);
 				int my = (int)(player_pos.y / 50);
 
 
@@ -794,15 +843,16 @@ void GameMain::Player()
 					else if (map_data_b[my][mx + 1] != ' ')
 						player_pos.y = (my + 1) * 50;
 				}
+			}*/
 			}
-		
+
 			if (key_buffer.IsPressed(Keys_M)) {
 				punch_state = 1;
 			}
 		}
 	}
 
-	
+
 
 
 	if (f < 4) {
@@ -827,18 +877,18 @@ void GameMain::Player()
 
 	skil_time++;
 	//暗転化
-	
-		if (black_flag == false)
-		{
-			/*if (key_buffer.IsPressed(Keys_Space) || pad_buffer.IsPressed(GamePad_Button6))
-			{*/if (randam_skil == 1) {
-				skill_state = true;
-				alpha_flag = true;
-				black_flag = true;
-			}
-			//}
+
+	if (black_flag == false)
+	{
+		/*if (key_buffer.IsPressed(Keys_Space) || pad_buffer.IsPressed(GamePad_Button6))
+		{*/if (randam_skil == 1) {
+			skill_state = true;
+			alpha_flag = true;
+			black_flag = true;
 		}
-	
+		//}
+	}
+
 
 	if (skill_state == true)
 	{
@@ -866,22 +916,22 @@ void GameMain::Player()
 	}
 
 	//透明化
-	
-		if (abc == 0)
-		{
 
-			if (invisible_state == false)
-			{
-				/*if (key_buffer.IsPressed(Keys_Q) || pad_buffer.IsPressed(GamePad_Button5))
-				{*/
-				if (randam_skil == 2) {
-					abc = 1;
-					invisible_state = true;
-					//}
-				}
+	if (abc == 0)
+	{
+
+		if (invisible_state == false)
+		{
+			/*if (key_buffer.IsPressed(Keys_Q) || pad_buffer.IsPressed(GamePad_Button5))
+			{*/
+			if (randam_skil == 2) {
+				abc = 1;
+				invisible_state = true;
+				//}
 			}
 		}
-	
+	}
+
 
 	if (invisible_state == true)
 	{
@@ -901,30 +951,32 @@ void GameMain::Player()
 	}
 
 	//ダッシュ
-	if (randam_skil == 3) {
+	/*if (randam_skil == 3) {
 		player_spd = 7;
 		if (skil_time >= 120) {
 			player_spd = 5;
-			
-		}
-	}
 
-	
+		}
+	}*/
+
+
 	//スタン
 	if (randam_skil == 4) {
-		越前 = 1;
+		越前 += 1;
 		if (skil_time >= 120) {
 			randam_skil = 5;
 		}
-		
+
 	}
 	//越前
 	if (越前 == 1) {
 		se->Play();
+
 	}
-	
-	
-	
+
+
+
+
 	//マップ
 	int mx = player_pos.x / 50;
 	int my = player_pos.y / 50;
@@ -956,14 +1008,14 @@ void GameMain::Player()
 		for (int y = 0; y < 18; y++) {
 			for (int x = 0; x < map_data_b[y].size(); x++) {
 				if (dist_player[y][x] >= 0)
-					dist_player[y][x] = 1.0 -((dist_player[y][x] - min2) / normal2);
+					dist_player[y][x] = 1.0 - ((dist_player[y][x] - min2) / normal2);
 				else
 					dist_player[y][x] = 0;
 			}
 		}
 
-	
-		
+
+
 
 		prev_mx2 = mx;
 		prev_my2 = my;
@@ -998,7 +1050,7 @@ void GameMain::Player()
 		oni_flame_x = 0;
 	}
 
-	
+
 
 
 
@@ -1023,10 +1075,10 @@ void GameMain::Fake()
 	int my = (int)(fake_pos.y / 50);
 	int prev_mx = 0;
 	int prev_my = 0;
-	
+
 	float max = 0;
-	
-	
+
+
 	if (k_count == 10) {
 
 		k = 0;
@@ -1079,52 +1131,52 @@ void GameMain::Fake()
 
 
 
-		if (k == 1) {
+	if (k == 1) {
 
-			fake_pos.y -= 5;
-			direc2 = 3;
-			k_count++;
-		}
-		if (k == 2) {
+		fake_pos.y -= 5;
+		direc2 = 3;
+		k_count++;
+	}
+	if (k == 2) {
 
-			fake_pos.y += 5;
-			direc2 = 0;
-			k_count++;
-		}
-		if (k == 3) {
+		fake_pos.y += 5;
+		direc2 = 0;
+		k_count++;
+	}
+	if (k == 3) {
 
-			fake_pos.x += 5;
-			direc2 = 1;
-			k_count++;
-		}
-		if (k == 4) {
+		fake_pos.x += 5;
+		direc2 = 1;
+		k_count++;
+	}
+	if (k == 4) {
 
-			fake_pos.x -= 5;
-			direc2 = 2;
-			k_count++;
-		}
-	
+		fake_pos.x -= 5;
+		direc2 = 2;
+		k_count++;
+	}
+
 
 	// 鬼とデコイの当たり判定
-		if (invisible_state == false) {
-			if (punch_state == 1) {
-				if (oni_pos.x + 35 < fake_pos.x + 15 || oni_pos.x + 15 > fake_pos.x + 35 ||
-					oni_pos.y + 40 < fake_pos.y + 10 || oni_pos.y + 10 > fake_pos.y + 40) {
-				}
-				else if (time >= 0) {
-
-					stun_state = true;
-				}
-				
+	if (invisible_state == false) {
+		if (punch_state == 1) {
+			if (oni_pos.x + 35 < fake_pos.x + 15 || oni_pos.x + 15 > fake_pos.x + 35 ||
+				oni_pos.y + 40 < fake_pos.y + 10 || oni_pos.y + 10 > fake_pos.y + 40) {
 			}
+			else if (time >= 0) {
+
+				stun_state = true;
+			}
+
 		}
+	}
 
-	
 
-	
 
-	
-	
+
+
+
+
 
 }
 
@@ -1139,7 +1191,7 @@ void GameMain::Fake2() {
 
 	float max2 = 0;
 
-	
+
 	if (j_count == 10) {
 
 
@@ -1186,57 +1238,57 @@ void GameMain::Fake2() {
 			}
 		}
 	}
-	
 
-		//		}
-		
-		if (j == 1) {
 
-			fake2_pos.y -= 5;
-			direc3 = 3;
-			j_count++;
-		}
-		if (j == 2) {
+	//		}
 
-			fake2_pos.y += 5;
-			direc3 = 0;
-			j_count++;
-		}
-		if (j == 3) {
-			fake2_pos.x += 5;
-			direc3 = 1;
-			j_count++;
-		}
+	if (j == 1) {
 
-		if (j == 4) {
+		fake2_pos.y -= 5;
+		direc3 = 3;
+		j_count++;
+	}
+	if (j == 2) {
 
-			fake2_pos.x -= 5;
-			direc3 = 2;
-			j_count++;
-		}
-	
+		fake2_pos.y += 5;
+		direc3 = 0;
+		j_count++;
+	}
+	if (j == 3) {
+		fake2_pos.x += 5;
+		direc3 = 1;
+		j_count++;
+	}
+
+	if (j == 4) {
+
+		fake2_pos.x -= 5;
+		direc3 = 2;
+		j_count++;
+	}
+
 	// 鬼とデコイの当たり判定
-		if (invisible_state == false) {
-			if (punch_state == 1) {
-				if (oni_pos.x + 35 < fake2_pos.x + 15 || oni_pos.x + 15 > fake2_pos.x + 35 ||
-					oni_pos.y + 40 < fake2_pos.y + 10 || oni_pos.y + 10 > fake2_pos.y + 40) {
-				}
-				else if (time >= 0) {
-
-					stun_state = true;
-				}
-
+	if (invisible_state == false) {
+		if (punch_state == 1) {
+			if (oni_pos.x + 35 < fake2_pos.x + 15 || oni_pos.x + 15 > fake2_pos.x + 35 ||
+				oni_pos.y + 40 < fake2_pos.y + 10 || oni_pos.y + 10 > fake2_pos.y + 40) {
 			}
-		}
+			else if (time >= 0) {
 
-		if (stun_state == true) {
-			stun_time += 1.0f;
-			if (stun_time >= 120.0f){
-
-				stun_time = 0.0f;
-				stun_state = false;
+				stun_state = true;
 			}
+
 		}
+	}
+
+	if (stun_state == true) {
+		stun_time += 1.0f;
+		if (stun_time >= 120.0f) {
+
+			stun_time = 0.0f;
+			stun_state = false;
+		}
+	}
 
 }
 
@@ -1296,10 +1348,21 @@ void GameMain::Draw()
 		}
 	}
 
+	for (int x = 14; x < 17; x++) {
+		for (int y = 5; y < 14; y++) {
+			SpriteBatch.Draw(*ton, Vector3(x * 50, y * 50, -1), RectWH(0, 0, 50, 50));
+		}
+	}
+
+	for (int x = 11; x < 20; x++) {
+		for (int y = 8; y < 11; y++) {
+			SpriteBatch.Draw(*ton, Vector3(x * 50, y * 50, -1), RectWH(0, 0, 50, 50));
+		}
+	}
 	//SpriteBatch.Draw(*oni, oni_pos,oni_alpha);
 	if (punch_state == 1)
 	{
-		SpriteBatch.Draw(*onipunch, Vector3(oni_pos.x, oni_pos.y - 20, 0), RectWH(50 * (int)oni_flame_x, 70 * (int)oni_flame_y, 50, 70), oni_alpha);
+		SpriteBatch.Draw(*onipunch, Vector3(oni_pos.x, oni_pos.y - 20, 0), RectWH(50 * (int)oni_flame_x, 70 * (int)direc4, 50, 70), oni_alpha);
 	}
 	else if (oni_state == 1)
 	{
@@ -1313,22 +1376,22 @@ void GameMain::Draw()
 	{
 		SpriteBatch.Draw(*oni, Vector3(oni_pos.x, oni_pos.y - 20, 0), RectWH((int)anime * 50, (int)direc4 * 70, 50, 70), oni_alpha);
 	}
-	
+
 
 	//SpriteBatch.Draw(*onipunch, Vector3(0, 0, 0), RectWH(50 * (int)oni_flame_x, 70 * (int)oni_flame_y, 50, 70), oni_alpha);
 	if (oni_state == 1) {
-		SpriteBatch.Draw(*down, Vector3(player_pos.x, player_pos.y - 20, 0), RectWH(50 * (int)down_flame, (int)direc*70, 50, 70), invisible_alpha);
+		SpriteBatch.Draw(*down, Vector3(player_pos.x, player_pos.y - 20, 0), RectWH(50 * (int)down_flame, (int)direc * 70, 50, 70), invisible_alpha);
 	}
 	else if (oni_state == 2) {
 		SpriteBatch.Draw(*playerwin, Vector3(player_pos.x, player_pos.y - 20, 0), RectWH(50 * (int)win_flame, 0, 50, 70), invisible_alpha);
 	}
 	else
 	{
-		SpriteBatch.Draw(*player, Vector3(player_pos.x,player_pos.y-20,0), RectWH((int)anime*50, (int)direc*70, 50, 70), invisible_alpha);
+		SpriteBatch.Draw(*player, Vector3(player_pos.x, player_pos.y - 20, 0), RectWH((int)anime * 50, (int)direc * 70, 50, 70), invisible_alpha);
 	}
 
-		SpriteBatch.Draw(*player, Vector3(fake_pos.x, fake_pos.y - 20, 0), RectWH((int)anime * 50,(int) direc2 * 70, 50, 70),invisible_alpha);
-		SpriteBatch.Draw(*player, Vector3(fake2_pos.x, fake2_pos.y - 20, 0), RectWH((int)anime * 50, (int)direc3* 70, 50, 70), invisible_alpha);
+	SpriteBatch.Draw(*player, Vector3(fake_pos.x, fake_pos.y - 20, 0), RectWH((int)anime * 50, (int)direc2 * 70, 50, 70), invisible_alpha);
+	SpriteBatch.Draw(*player, Vector3(fake2_pos.x, fake2_pos.y - 20, 0), RectWH((int)anime * 50, (int)direc3 * 70, 50, 70), invisible_alpha);
 	/*if (p_walk_flag == 0)
 	{
 		SpriteBatch.Draw(*player, player_pos, invisible_alpha);
@@ -1351,7 +1414,7 @@ void GameMain::Draw()
 		}
 	}*/
 
-	SpriteBatch.DrawString(DefaultFont, Vector2(0, 0), Color(255, 0, 0), _T("%03d"), (int)skil_time/60);
+	SpriteBatch.DrawString(DefaultFont, Vector2(0, 0), Color(255, 0, 0), _T("%03d"), (int)skil_time / 60);
 	SpriteBatch.DrawString(DefaultFont, Vector2(100, 0), Color(255, 0, 0), _T("%03d"), (int)randam_skil);
 	//SpriteBatch.DrawString(DefaultFont, Vector2(0, 0), Color(0, 0, 0), _T("%03f"), player_pos.x);
 
@@ -1365,7 +1428,7 @@ void GameMain::Draw()
 
 	SpriteBatch.DrawString(DefaultFont, Vector2(960, 0),
 		Color(0, 0, 255), _T("TIME:%d"), time);
-	
+
 
 	if (skill_state == true)
 	{

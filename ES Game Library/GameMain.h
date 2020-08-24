@@ -132,6 +132,7 @@ private:
 	float direc4;
 	float direc5;
 	float player_state;
+	int player_count;
 	float down_flame;
 	float randam_skil;
 	float randam[4];
