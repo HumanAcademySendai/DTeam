@@ -39,6 +39,8 @@ bool GameMain::Initialize()
 	//player = GraphicsDevice.CreateSpriteFromFile(_T("Image/Chara.png"));
 	skill = GraphicsDevice.CreateSpriteFromFile(_T("Image/skill.png"));
 
+	change = Vector3(0, 0, 0);
+	cl = Color(255, 255, 255);
 	player_spd = 5.0f;
 	oni_spd = player_spd * 1.2f;
 	player_state = 0;
@@ -60,6 +62,8 @@ bool GameMain::Initialize()
 	down_flame = 0;
 	player_count = 0;
 
+	a = 7;
+	b = 11;
 	skill_state = true;
 	skill_time = 0.0f;
 	skill_alpha = 1.0f;
@@ -114,16 +118,16 @@ bool GameMain::Initialize()
 
 	lose = GraphicsDevice.CreateSpriteFromFile(_T("lose.png"));
 
-	map_data_b[0] = ("################################");
-	map_data_b[1] = ("#                              #");
-	map_data_b[2] = ("#    $$           $$   $$  $$  #");
-	map_data_b[3] = ("#    $$           $$           #");
-	map_data_b[4] = ("#    $$                        #");
-	map_data_b[5] = ("#            $   $       $$$$  #");
-	map_data_b[6] = ("#            $   $             #");
-	map_data_b[7] = ("#          $$$   $$$           #");
-	map_data_b[8] = ("#                        $$$$  #");
-	map_data_b[9] = ("#                              #");
+	map_data_b[0] =  ("################################");
+	map_data_b[1] =  ("#                              #");
+	map_data_b[2] =  ("#    $$           $$   $$  $$  #");
+	map_data_b[3] =  ("#    $$           $$           #");
+	map_data_b[4] =  ("#    $$                        #");
+	map_data_b[5] =  ("#            $   $       $$$$  #");
+	map_data_b[6] =  ("#            $   $             #");
+	map_data_b[7] =  ("#          $$$   $$$           #");
+	map_data_b[8] =  ("#                        $$$$  #");
+	map_data_b[9] =  ("#                              #");
 	map_data_b[10] = ("#                              #");
 	map_data_b[11] = ("#          $$$   $$$           #");
 	map_data_b[12] = ("#            $   $             #");
@@ -377,6 +381,8 @@ int GameMain::Update()
 	if (anime > 5) {
 		anime = 0;
 	}
+
+	AI_count++;
 
 	return 0;
 }
@@ -855,15 +861,15 @@ void GameMain::Player()
 
 
 
-	if (f < 4) {
+	if (f < 5) {
 		if (skil_time >= 300) {
 			if (key_buffer.IsPressed(Keys_Space) || pad_buffer.IsPressed(GamePad_Button6)) {
 
 				/*randam_skil += 1;*/
-				randam_skil = MathHelper_Random(1, 4);
+				randam_skil = MathHelper_Random(1, 5);
 				for (int i = -1; i < f; i++) {
 					if (randam[i] == randam_skil) {
-						randam_skil = MathHelper_Random(1, 4);
+						randam_skil = MathHelper_Random(1, 5);
 						i = -1;
 					}
 				}
@@ -951,20 +957,19 @@ void GameMain::Player()
 	}
 
 	//ダッシュ
-	/*if (randam_skil == 3) {
-		player_spd = 7;
-		if (skil_time >= 120) {
-			player_spd = 5;
+	if (randam_skil == 3) {
+		stun_state = true;
+		randam_skil = 0;
 
-		}
-	}*/
+	}
+	
 
 
 	//スタン
 	if (randam_skil == 4) {
 		越前 += 1;
 		if (skil_time >= 120) {
-			randam_skil = 5;
+			randam_skil = 0;
 		}
 
 	}
@@ -972,6 +977,10 @@ void GameMain::Player()
 	if (越前 == 1) {
 		se->Play();
 
+	}
+	//カラー
+	if (randam_skil == 5) {
+		cl = Color(255, 0, 0);
 	}
 
 
@@ -1085,45 +1094,48 @@ void GameMain::Fake()
 
 		if (randam_skil != 4) {
 			if (oni_state == 0) {
-				if (dist_AI[my - 1][mx] > max) {
-					max = dist_AI[my - 1][mx];
-					k = 1;
-				}
-				if (dist_AI[my + 1][mx] > max) {
-					max = dist_AI[my + 1][mx];
-					k = 2;
-
-				}
-
-				if (dist_AI[my][mx + 1] > max) {
-					max = dist_AI[my][mx + 1];
-					k = 3;
-
-				}
-
-				if (dist_AI[my][mx - 1] > max) {
-					max = dist_AI[my][mx - 1];
-					k = 4;
-				}
-
-				if (k != 0) {
-
-
-					for (int i = 3; i > 0; i--) {
-						dist[my_k[i]][mx_k[i]] = 0;
-						dist_player[my_k[i]][mx_k[i]] = 0;
+				if (time % b != 0) {
+					if (dist_AI[my - 1][mx] > max) {
+						max = dist_AI[my - 1][mx];
+						k = 1;
 					}
-					for (int i = 3; i > 0; i--) {
-						mx_k[i] = mx_k[i - 1];
-						my_k[i] = my_k[i - 1];
+					if (dist_AI[my + 1][mx] > max) {
+						max = dist_AI[my + 1][mx];
+						k = 2;
+
 					}
 
+					if (dist_AI[my][mx + 1] > max) {
+						max = dist_AI[my][mx + 1];
+						k = 3;
 
-					mx_k[0] = mx;
-					my_k[0] = my;
+					}
+
+					if (dist_AI[my][mx - 1] > max) {
+						max = dist_AI[my][mx - 1];
+						k = 4;
+					}
+
+					if (k != 0) {
 
 
-					k_count = 0;
+						for (int i = 3; i > 0; i--) {
+							dist[my_k[i]][mx_k[i]] = 0;
+							dist_player[my_k[i]][mx_k[i]] = 0;
+						}
+						for (int i = 3; i > 0; i--) {
+							mx_k[i] = mx_k[i - 1];
+							my_k[i] = my_k[i - 1];
+						}
+
+
+						mx_k[0] = mx;
+						my_k[0] = my;
+
+
+						k_count = 0;
+						
+					}
 				}
 			}
 		}
@@ -1198,42 +1210,46 @@ void GameMain::Fake2() {
 		j = 0;
 		if (randam_skil != 4) {
 			if (oni_state == 0) {
-				if (dist2[my - 1][mx] > max2) {
-					max2 = dist2[my - 1][mx];
-					j = 1;
-				}
-				if (dist2[my + 1][mx] > max2) {
-					max2 = dist2[my + 1][mx];
-					j = 2;
-
-				}
-
-				if (dist2[my][mx + 1] > max2) {
-					max2 = dist2[my][mx + 1];
-					j = 3;
-
-				}
-
-				if (dist2[my][mx - 1] > max2) {
-					max2 = dist2[my][mx - 1];
-					j = 4;
-				}
-
-				if (j != 0) {
-
-
-					for (int i = 3; i > 0; i--) {
-						dist[my_i[i]][mx_i[i]] = 0;
-						dist_player[my_i[i]][mx_i[i]] = 0;
+				if (time % a != 0) {
+					if (dist2[my - 1][mx] > max2) {
+						max2 = dist2[my - 1][mx];
+						j = 1;
 					}
-					for (int i = 3; i > 0; i--) {
-						mx_i[i] = mx_i[i - 1];
-						my_i[i] = my_i[i - 1];
-					}
-					mx_i[0] = mx;
-					my_i[0] = my;
+					if (dist2[my + 1][mx] > max2) {
+						max2 = dist2[my + 1][mx];
+						j = 2;
 
-					j_count = 0;
+					}
+
+					if (dist2[my][mx + 1] > max2) {
+						max2 = dist2[my][mx + 1];
+						j = 3;
+
+					}
+
+					if (dist2[my][mx - 1] > max2) {
+						max2 = dist2[my][mx - 1];
+						j = 4;
+					}
+
+					if (j != 0) {
+
+
+						for (int i = 3; i > 0; i--) {
+							dist[my_i[i]][mx_i[i]] = 0;
+							dist_player[my_i[i]][mx_i[i]] = 0;
+						}
+						for (int i = 3; i > 0; i--) {
+							mx_i[i] = mx_i[i - 1];
+							my_i[i] = my_i[i - 1];
+						}
+						mx_i[0] = mx;
+						my_i[0] = my;
+
+						j_count = 0;
+
+						
+					}
 				}
 			}
 		}
@@ -1335,28 +1351,28 @@ void GameMain::Draw()
 	for (int y = 0; y < 18; y++) {
 		for (int x = 0; x < 32; x++) {
 			if (map_data_b[y][x] == '#') {
-				SpriteBatch.Draw(*bg, Vector3(x * 50, y * 50, 0), RectWH(0, 150, 50, 50));
+				SpriteBatch.Draw(*bg, Vector3(x * 50, y * 50, 0), RectWH(0, 150, 50, 50),cl);
 			}
 			else if (map_data_b[y][x] == '$') {
 
-				SpriteBatch.Draw(*bg, Vector3(x * 50, y * 50, 0), RectWH(100, 700, 50, 50));
+				SpriteBatch.Draw(*bg, Vector3(x * 50, y * 50, 0), RectWH(100, 700, 50, 50),cl);
 			}
 			else {
 
-				SpriteBatch.Draw(*bg, Vector3(x * 50, y * 50, 0), RectWH(0, 50, 50, 50));
+				SpriteBatch.Draw(*bg, Vector3(x * 50, y * 50, 0), RectWH(0, 50, 50, 50),cl);
 			}
 		}
 	}
 
 	for (int x = 14; x < 17; x++) {
 		for (int y = 5; y < 14; y++) {
-			SpriteBatch.Draw(*ton, Vector3(x * 50, y * 50, -1), RectWH(0, 0, 50, 50));
+			SpriteBatch.Draw(*ton, Vector3(x * 50, y * 50, -1), RectWH(0, 0, 50, 50),cl);
 		}
 	}
 
 	for (int x = 11; x < 20; x++) {
 		for (int y = 8; y < 11; y++) {
-			SpriteBatch.Draw(*ton, Vector3(x * 50, y * 50, -1), RectWH(0, 0, 50, 50));
+			SpriteBatch.Draw(*ton, Vector3(x * 50, y * 50, -1), RectWH(0, 0, 50, 50),cl);
 		}
 	}
 	//SpriteBatch.Draw(*oni, oni_pos,oni_alpha);

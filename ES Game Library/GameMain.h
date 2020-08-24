@@ -124,6 +124,7 @@ private:
 	Vector3 fake_pos;
 	Vector3 fake2_pos;
 	Vector3 player_pos;
+	Vector3 change;
 	Color cl;
 	float anime;
 	float direc;
@@ -133,9 +134,10 @@ private:
 	float direc5;
 	float player_state;
 	int player_count;
+	int AI_count;
 	float down_flame;
 	float randam_skil;
-	float randam[4];
+	float randam[5];
 	float skil_time;
 	float ‰z‘O;
 	int f;
@@ -144,6 +146,7 @@ private:
 	int k;
 	int j;
 	int j_count;
+	int a,b;
 
 	MEDIA bgm;
 	SOUND se;
