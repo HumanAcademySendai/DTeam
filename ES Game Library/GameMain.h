@@ -111,6 +111,7 @@ private:
 
 	SPRITE lose;
 	float lose_flame;
+	float lose_time;
 
 	// ä÷êîêÈåæ
 	SPRITE wall;
@@ -119,6 +120,7 @@ private:
 	SPRITE bg;
 	SPRITE ton;
 	SPRITE down;
+	SPRITE oniwin;
 	Vector3 fake_pos;
 	Vector3 fake2_pos;
 	Vector3 player_pos;
@@ -128,6 +130,9 @@ private:
 	float direc2;
 	float direc3;
 	float direc4;
+	float direc5;
+	float player_state;
+	float down_flame;
 	float randam_skil;
 	float randam[4];
 	float skil_time;
@@ -138,7 +143,6 @@ private:
 	int k;
 	int j;
 	int j_count;
-	float punch_state;
 
 	MEDIA bgm;
 	SOUND se;

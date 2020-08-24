@@ -41,6 +41,7 @@ bool GameMain::Initialize()
 
 	player_spd = 5.0f;
 	oni_spd = player_spd * 1.2f;
+	player_state = 0;
 
 	p_flame_x = 0.0f;
 	p_flame_y = 0.0f;
@@ -55,6 +56,8 @@ bool GameMain::Initialize()
 
 	win_time = 0;
 	lose_flame = 0;
+
+	down_flame = 0;
 
 	skill_state = false;
 	skill_time = 0.0f;
@@ -75,6 +78,7 @@ bool GameMain::Initialize()
 	punch_state = 0;
 	stun_state = false;
 	stun_time = 0;
+	lose_time = 0;
 
 	InputDevice.CreateGamePad(1);
 
@@ -99,6 +103,8 @@ bool GameMain::Initialize()
 	anime = 0;
 	direc = 0;
 	oni = GraphicsDevice.CreateSpriteFromFile(_T("oni2.png"));
+
+	oniwin = GraphicsDevice.CreateSpriteFromFile(_T("oniwin.png"));
 	
 	playerwin = GraphicsDevice.CreateSpriteFromFile(_T("playerwin.png"));
 
@@ -301,16 +307,22 @@ int GameMain::Update()
 		oni_alpha = 1.0f;
 	}
 
-	flame++;
-	if (flame == 60) {
-		time -= 1;
-		flame = 0;
-		if (time == 0) {
+	if (oni_state == 0) {
+		flame++;
+		if (flame == 60) {
+			time -= 1;
+			flame = 0;
+			if (time == 0) {
 
-			return GAME_SCENE(new clearScene);
+				oni_state = 2;
+			}
 		}
 	}
 
+	if (lose_time>=180) {
+		return GAME_SCENE(new clearScene);
+	}
+	
 	//鬼と逃げる人の当たり判定
 
 	KeyboardBuffer key_buffer = Keyboard->GetBuffer();
@@ -320,16 +332,18 @@ int GameMain::Update()
 	
 	if (punch_state == 1)
 	{
+		if (invisible_state == false) {
 
-		if (player_pos.x + 35 < oni_pos.x + 15 || player_pos.x + 15 > oni_pos.x + 35 ||
-			player_pos.y + 40 < oni_pos.y + 10 || player_pos.y + 10 > oni_pos.y + 40)
-		{
+			if (player_pos.x + 35 < oni_pos.x + 15 || player_pos.x + 15 > oni_pos.x + 35 ||
+				player_pos.y + 40 < oni_pos.y + 10 || player_pos.y + 10 > oni_pos.y + 40)
+			{
+			}
+			else if (time >= 0)
+			{
+				oni_state = 1;
+				player_state = 1;
+			}
 		}
-		else if (time >= 0)
-		{
-			oni_state = 1;
-		}
-
 	}
 
 	if (win_time >= 180)
@@ -342,7 +356,7 @@ int GameMain::Update()
 
 
 
-	if (invisible_state == false) {
+	/*if (invisible_state == false) {
 		if ((player_pos.x + 35 < oni_pos.x + 15 || player_pos.x + 15 > oni_pos.x + 35 ||
 			player_pos.y + 40 < oni_pos.y + 10 || player_pos.y + 10 > oni_pos.y + 40))
 		{
@@ -351,10 +365,14 @@ int GameMain::Update()
 		{
 			return GAME_SCENE(new resultScene);
 		}
-	}
+	}*/
 	
-	anime += 0.2f;
-
+	if (oni_state == 0) {
+		anime += 0.2f;
+	}
+	else {
+		anime = 1;
+	}
 	if (anime > 5) {
 		anime = 0;
 	}
@@ -394,95 +412,96 @@ void GameMain::ONI()
 	int nx = (int)((oni_pos.x + 50) / 50);
 	int ny = (int)((oni_pos.y + 50) / 50);
 
-	if (stun_state == false)
-	{
-		if (key.IsKeyDown(Keys_D) || pad_direction == 6) {
-			oni_pos.x += oni_spd;
-			direc4 = 2;
+	if (stun_state == false){
+		if (oni_state == 0) {
+			if (key.IsKeyDown(Keys_D) || pad_direction == 6) {
+				oni_pos.x += oni_spd;
+					direc4 = 2;
 
-			int mx = (int)(oni_pos.x / 50);
-			int my = (int)(oni_pos.y / 50);
+					int mx = (int)(oni_pos.x / 50);
+					int my = (int)(oni_pos.y / 50);
 
-			if (map_data_b[my][mx + 1] != ' ')
-				oni_pos.x = mx * 50;
-
-
-			int py = (int)oni_pos.y % 50;
-			if (py != 0) {
-				if (py < 10)
-					oni_pos.y = ((int)oni_pos.y / 50 + 0) * 50;
-				else if (py > 40)
-					oni_pos.y = ((int)oni_pos.y / 50 + 1) * 50;
-				else if (map_data_b[my + 1][mx + 1] != ' ')
-					oni_pos.x = mx * 50;
+					if (map_data_b[my][mx + 1] != ' ')
+						oni_pos.x = mx * 50;
 
 
+					int py = (int)oni_pos.y % 50;
+				if (py != 0) {
+					if (py < 10)
+						oni_pos.y = ((int)oni_pos.y / 50 + 0) * 50;
+					else if (py > 40)
+						oni_pos.y = ((int)oni_pos.y / 50 + 1) * 50;
+					else if (map_data_b[my + 1][mx + 1] != ' ')
+						oni_pos.x = mx * 50;
+
+
+				}
 			}
-		}
 
-		else if (key.IsKeyDown(Keys_A) || pad_direction == 4) {
-			oni_pos.x -= oni_spd;
-			direc4 = 1;
+			else if (key.IsKeyDown(Keys_A) || pad_direction == 4) {
+				oni_pos.x -= oni_spd;
+				direc4 = 1;
 
-			int mx = (int)(oni_pos.x / 50);
-			int my = (int)(oni_pos.y / 50);
+				int mx = (int)(oni_pos.x / 50);
+				int my = (int)(oni_pos.y / 50);
 
-			if (map_data_b[my][mx] != ' ')
-				oni_pos.x = (mx + 1) * 50;
-
-
-			int py = (int)oni_pos.y % 50;
-			if (py != 0) {
-				if (py < 10)
-					oni_pos.y = ((int)oni_pos.y / 50 + 0) * 50;
-				else if (py > 40)
-					oni_pos.y = ((int)oni_pos.y / 50 + 1) * 50;
-				else if (map_data_b[my + 1][mx] != ' ')
+				if (map_data_b[my][mx] != ' ')
 					oni_pos.x = (mx + 1) * 50;
+
+
+				int py = (int)oni_pos.y % 50;
+				if (py != 0) {
+					if (py < 10)
+						oni_pos.y = ((int)oni_pos.y / 50 + 0) * 50;
+					else if (py > 40)
+						oni_pos.y = ((int)oni_pos.y / 50 + 1) * 50;
+					else if (map_data_b[my + 1][mx] != ' ')
+						oni_pos.x = (mx + 1) * 50;
+				}
 			}
-		}
 
-		else if (key.IsKeyDown(Keys_S) || pad_direction == 2) {
-			oni_pos.y += oni_spd;
-			direc4 = 0;
+			else if (key.IsKeyDown(Keys_S) || pad_direction == 2) {
+				oni_pos.y += oni_spd;
+				direc4 = 0;
 
-			int mx = (int)(oni_pos.x / 50);
-			int my = (int)(oni_pos.y / 50);
+				int mx = (int)(oni_pos.x / 50);
+				int my = (int)(oni_pos.y / 50);
 
-			if (map_data_b[my + 1][mx] != ' ')
-				oni_pos.y = my * 50;
-
-
-			int px = (int)oni_pos.x % 50;
-			if (px != 0) {
-				if (px < 10)
-					oni_pos.x = ((int)oni_pos.x / 50 + 0) * 50;
-				else if (px > 40)
-					oni_pos.x = ((int)oni_pos.x / 50 + 1) * 50;
-				else if (map_data_b[my + 1][mx + 1] != ' ')
+				if (map_data_b[my + 1][mx] != ' ')
 					oni_pos.y = my * 50;
+
+
+				int px = (int)oni_pos.x % 50;
+				if (px != 0) {
+					if (px < 10)
+						oni_pos.x = ((int)oni_pos.x / 50 + 0) * 50;
+					else if (px > 40)
+						oni_pos.x = ((int)oni_pos.x / 50 + 1) * 50;
+					else if (map_data_b[my + 1][mx + 1] != ' ')
+						oni_pos.y = my * 50;
+				}
 			}
-		}
 
-		else if (key.IsKeyDown(Keys_W) || pad_direction == 8) {
-			oni_pos.y -= oni_spd;
-			direc4 = 3;
+			else if (key.IsKeyDown(Keys_W) || pad_direction == 8) {
+				oni_pos.y -= oni_spd;
+				direc4 = 3;
 
-			int mx = (int)(oni_pos.x / 50);
-			int my = (int)(oni_pos.y / 50);
+				int mx = (int)(oni_pos.x / 50);
+				int my = (int)(oni_pos.y / 50);
 
-			if (map_data_b[my][mx] != ' ')
-				oni_pos.y = (my + 1) * 50;
-
-
-			int px = (int)oni_pos.x % 50;
-			if (px != 0) {
-				if (px < 10)
-					oni_pos.x = ((int)oni_pos.x / 50 + 0) * 50;
-				else if (px > 40)
-					oni_pos.x = ((int)oni_pos.x / 50 + 1) * 50;
-				else if (map_data_b[my][mx + 1] != ' ')
+				if (map_data_b[my][mx] != ' ')
 					oni_pos.y = (my + 1) * 50;
+
+
+				int px = (int)oni_pos.x % 50;
+				if (px != 0) {
+					if (px < 10)
+						oni_pos.x = ((int)oni_pos.x / 50 + 0) * 50;
+					else if (px > 40)
+						oni_pos.x = ((int)oni_pos.x / 50 + 1) * 50;
+					else if (map_data_b[my][mx + 1] != ' ')
+						oni_pos.y = (my + 1) * 50;
+				}
 			}
 		}
 	}
@@ -548,21 +567,26 @@ void GameMain::ONI()
 		if (oni_state == 1)
 		{
 			win_flame += 0.1f;
-			lose_flame += 0.1f;
-
+			down_flame += 0.1;
 			win_time++;
 		}
 
-		if (lose_flame >= 7)
+		if (lose_flame > 6)
 		{
 			lose_flame = 0;
 		}
 
-		if (win_flame >= 5)
+		if (win_flame >= 4)
 		{
 			win_flame = 0;
 		}
 
+		if (oni_state == 2) {
+			win_flame += 0.1f;
+			lose_flame += 0.1f;
+			lose_time++;
+		}
+		
 
 
 
@@ -598,6 +622,7 @@ void GameMain::Player()
 	KeyboardBuffer key_buffer = Keyboard->GetBuffer();
 	GamePadState  pad_2 = GamePad(1)->GetState();
 	GamePadBuffer pad_buffer = GamePad(1)->GetBuffer();
+	GamePadBuffer pad_buffer2 = GamePad(0)->GetBuffer();
 
 	pad2_direction = 0;
 	if (pad_2.X != 0 || pad_2.Y != 0) {
@@ -671,109 +696,113 @@ void GameMain::Player()
 	//		pad2_direction = 0;
 	//}
 	if (randam_skil != 4) {
-		if (key.IsKeyDown(Keys_Right) || pad2_direction == 6 /* pad_2.X > 0 */) {
-			player_pos.x += player_spd;
-			direc = 1;
-			int mx = (int)(player_pos.x / 50);
-			int my = (int)(player_pos.y / 50);
+		if (oni_state == 0) {
+			if (key.IsKeyDown(Keys_Right) || pad2_direction == 6 /* pad_2.X > 0 */) {
+				player_pos.x += player_spd;
+				direc = 1;
+				int mx = (int)(player_pos.x / 50);
+				int my = (int)(player_pos.y / 50);
 
-			if (map_data_b[my][mx + 1] != ' ')
-				player_pos.x = mx * 50;
-
-
-			int py = (int)player_pos.y % 50;
-			if (py != 0) {
-				if (py < 10)
-					player_pos.y = ((int)player_pos.y / 50 + 0) * 50;
-				else if (py > 40)
-					player_pos.y = ((int)player_pos.y / 50 + 1) * 50;
-				else if (map_data_b[my + 1][mx + 1] != ' ')
+				if (map_data_b[my][mx + 1] != ' ')
 					player_pos.x = mx * 50;
+
+
+				int py = (int)player_pos.y % 50;
+				if (py != 0) {
+					if (py < 10)
+						player_pos.y = ((int)player_pos.y / 50 + 0) * 50;
+					else if (py > 40)
+						player_pos.y = ((int)player_pos.y / 50 + 1) * 50;
+					else if (map_data_b[my + 1][mx + 1] != ' ')
+						player_pos.x = mx * 50;
+				}
 			}
-		}
 
 
-		else if (key.IsKeyDown(Keys_Left) || pad2_direction == 4 /* pad_2.X < 0 */) {
-			player_pos.x -= player_spd;
-			direc = 2;
-			int mx = (int)(player_pos.x / 50);
-			int my = (int)(player_pos.y / 50);
+			else if (key.IsKeyDown(Keys_Left) || pad2_direction == 4 /* pad_2.X < 0 */) {
+				player_pos.x -= player_spd;
+				direc = 2;
+				int mx = (int)(player_pos.x / 50);
+				int my = (int)(player_pos.y / 50);
 
-			if (map_data_b[my][mx] != ' ')
-				player_pos.x = (mx + 1) * 50;
-
-
-			int py = (int)player_pos.y % 50;
-			if (py != 0) {
-				if (py < 10)
-					player_pos.y = ((int)player_pos.y / 50 + 0) * 50;
-				else if (py > 40)
-					player_pos.y = ((int)player_pos.y / 50 + 1) * 50;
-				else if (map_data_b[my + 1][mx] != ' ')
+				if (map_data_b[my][mx] != ' ')
 					player_pos.x = (mx + 1) * 50;
+
+
+				int py = (int)player_pos.y % 50;
+				if (py != 0) {
+					if (py < 10)
+						player_pos.y = ((int)player_pos.y / 50 + 0) * 50;
+					else if (py > 40)
+						player_pos.y = ((int)player_pos.y / 50 + 1) * 50;
+					else if (map_data_b[my + 1][mx] != ' ')
+						player_pos.x = (mx + 1) * 50;
+				}
 			}
-		}
 
-		else if (key.IsKeyDown(Keys_Down) || pad2_direction == 2/* pad_2.Y > 0 */) {
-			player_pos.y += player_spd;
-			direc = 0;
+			else if (key.IsKeyDown(Keys_Down) || pad2_direction == 2/* pad_2.Y > 0 */) {
+				player_pos.y += player_spd;
+				direc = 0;
 
-			// 歩きアニメ
-			p_flame_x += 0.5f;
-			if (p_flame_x >= 5.0f)
-			{
-				p_flame_x = 0.0f;
-			}
-
-
-			int mx = (int)(player_pos.x / 50);
-			int my = (int)(player_pos.y / 50);
+				// 歩きアニメ
+				p_flame_x += 0.5f;
+				if (p_flame_x >= 5.0f)
+				{
+					p_flame_x = 0.0f;
+				}
 
 
-			if (map_data_b[my + 1][mx] != ' ')
-				player_pos.y = my * 50;
+				int mx = (int)(player_pos.x / 50);
+				int my = (int)(player_pos.y / 50);
 
 
-			int px = (int)player_pos.x % 50;
-			if (px != 0) {
-				if (px < 10)
-					player_pos.x = ((int)player_pos.x / 50 + 0) * 50;
-				else if (px > 40)
-					player_pos.x = ((int)player_pos.x / 50 + 1) * 50;
-				else if (map_data_b[my + 1][mx + 1] != ' ')
+				if (map_data_b[my + 1][mx] != ' ')
 					player_pos.y = my * 50;
-			}
-		}
-
-		else if (key.IsKeyDown(Keys_Up) || pad2_direction == 8/* pad_2.Y < 0 */) {
-			player_pos.y -= player_spd;
-			direc = 3;
-
-			int mx = (int)(player_pos.x / 50);
-			int my = (int)(player_pos.y / 50);
 
 
-
-			if (map_data_b[my][mx] != ' ') {
-				player_pos.y = (my + 1) * 50;
-
+				int px = (int)player_pos.x % 50;
+				if (px != 0) {
+					if (px < 10)
+						player_pos.x = ((int)player_pos.x / 50 + 0) * 50;
+					else if (px > 40)
+						player_pos.x = ((int)player_pos.x / 50 + 1) * 50;
+					else if (map_data_b[my + 1][mx + 1] != ' ')
+						player_pos.y = my * 50;
+				}
 			}
 
-			int px = (int)player_pos.x % 50;
-			if (px != 0) {
-				if (px < 10)
-					player_pos.x = ((int)player_pos.x / 50 + 0) * 50;
-				else if (px > 40)
-					player_pos.x = ((int)player_pos.x / 50 + 1) * 50;
-				else if (map_data_b[my][mx + 1] != ' ')
+			else if (key.IsKeyDown(Keys_Up) || pad2_direction == 8/* pad_2.Y < 0 */) {
+				player_pos.y -= player_spd;
+				direc = 3;
+
+				int mx = (int)(player_pos.x / 50);
+				int my = (int)(player_pos.y / 50);
+
+
+
+				if (map_data_b[my][mx] != ' ') {
 					player_pos.y = (my + 1) * 50;
+
+				}
+
+				int px = (int)player_pos.x % 50;
+				if (px != 0) {
+					if (px < 10)
+						player_pos.x = ((int)player_pos.x / 50 + 0) * 50;
+					else if (px > 40)
+						player_pos.x = ((int)player_pos.x / 50 + 1) * 50;
+					else if (map_data_b[my][mx + 1] != ' ')
+						player_pos.y = (my + 1) * 50;
+				}
+			}
+		
+			if (key_buffer.IsPressed(Keys_M)) {
+				punch_state = 1;
 			}
 		}
 	}
 
-	if (key_buffer.IsPressed(Keys_M)) {
-		punch_state = 1;
-	}
+	
 
 
 	if (f < 4) {
@@ -952,9 +981,11 @@ void GameMain::Player()
 
 
 	// パンチ
-	if (key_buffer.IsPressed(Keys_M))
-	{
-		punch_state = 1;
+	if (oni_state == 0) {
+		if (key_buffer.IsPressed(Keys_M) || pad_buffer2.IsPressed(GamePad_Button6))
+		{
+			punch_state = 1;
+		}
 	}
 
 	if (punch_state == 1)
@@ -996,11 +1027,12 @@ void GameMain::Fake()
 	float max = 0;
 	
 	
-		if (k_count == 10) {
+	if (k_count == 10) {
 
-			k = 0;
+		k = 0;
 
-			if(randam_skil != 4){
+		if (randam_skil != 4) {
+			if (oni_state == 0) {
 				if (dist_AI[my - 1][mx] > max) {
 					max = dist_AI[my - 1][mx];
 					k = 1;
@@ -1043,6 +1075,7 @@ void GameMain::Fake()
 				}
 			}
 		}
+	}
 
 
 
@@ -1074,25 +1107,19 @@ void GameMain::Fake()
 
 	// 鬼とデコイの当たり判定
 		if (invisible_state == false) {
-			if ((oni_pos.x + 35 < fake_pos.x + 15 || oni_pos.x + 15 > fake_pos.x + 35 ||
-				oni_pos.y + 40 < fake_pos.y + 10 || oni_pos.y + 10 > fake_pos.y + 40)) {
+			if (punch_state == 1) {
+				if (oni_pos.x + 35 < fake_pos.x + 15 || oni_pos.x + 15 > fake_pos.x + 35 ||
+					oni_pos.y + 40 < fake_pos.y + 10 || oni_pos.y + 10 > fake_pos.y + 40) {
+				}
+				else if (time >= 0) {
+
+					stun_state = true;
+				}
+				
 			}
-			else if (time >= 0) {
-
-				stun_state = true;
-			}
-			if (stun_state == true) {
-
-				stun_time += 1.0f;
-
-			}
-
 		}
-	if (stun_time >= 120.0f) {
 
-		stun_state = false;
-		stun_time = 0.0f;
-	}
+	
 
 	
 
@@ -1113,11 +1140,12 @@ void GameMain::Fake2() {
 	float max2 = 0;
 
 	
-		if (j_count == 10) {
+	if (j_count == 10) {
 
 
-			j = 0;
-			if (randam_skil != 4) {
+		j = 0;
+		if (randam_skil != 4) {
+			if (oni_state == 0) {
 				if (dist2[my - 1][mx] > max2) {
 					max2 = dist2[my - 1][mx];
 					j = 1;
@@ -1157,6 +1185,8 @@ void GameMain::Fake2() {
 				}
 			}
 		}
+	}
+	
 
 		//		}
 		
@@ -1187,25 +1217,27 @@ void GameMain::Fake2() {
 	
 	// 鬼とデコイの当たり判定
 		if (invisible_state == false) {
-			if ((oni_pos.x + 35 < fake2_pos.x + 15 || oni_pos.x + 15 > fake2_pos.x + 35 ||
-				oni_pos.y + 40 < fake2_pos.y + 10 || oni_pos.y + 10 > fake2_pos.y + 40)) {
-			}
-			else if (time >= 0) {
+			if (punch_state == 1) {
+				if (oni_pos.x + 35 < fake2_pos.x + 15 || oni_pos.x + 15 > fake2_pos.x + 35 ||
+					oni_pos.y + 40 < fake2_pos.y + 10 || oni_pos.y + 10 > fake2_pos.y + 40) {
+				}
+				else if (time >= 0) {
 
-				stun_state = true;
-			}
-			if (stun_state == true) {
-
-				stun_time += 1.0f;
+					stun_state = true;
+				}
 
 			}
 		}
 
-		if (stun_time >= 120.0f){
+		if (stun_state == true) {
+			stun_time += 1.0f;
+			if (stun_time >= 120.0f){
 
-			stun_state = false;
-			stun_time = 0.0f;
+				stun_time = 0.0f;
+				stun_state = false;
+			}
 		}
+
 }
 
 void GameMain::AI()
@@ -1267,31 +1299,36 @@ void GameMain::Draw()
 	//SpriteBatch.Draw(*oni, oni_pos,oni_alpha);
 	if (punch_state == 1)
 	{
-		SpriteBatch.Draw(*onipunch,oni_pos, RectWH(50 * (int)oni_flame_x, 70 * (int)oni_flame_y, 50, 70), oni_alpha);
+		SpriteBatch.Draw(*onipunch, Vector3(oni_pos.x, oni_pos.y - 20, 0), RectWH(50 * (int)oni_flame_x, 70 * (int)oni_flame_y, 50, 70), oni_alpha);
 	}
 	else if (oni_state == 1)
 	{
-		SpriteBatch.Draw(*playerwin, oni_pos, RectWH(50 * (int)win_flame, 0, 50, 70), oni_alpha);
+		SpriteBatch.Draw(*oniwin, Vector3(oni_pos.x, oni_pos.y - 20, 0), RectWH(50 * (int)win_flame, 0, 50, 70), oni_alpha);
+	}
+	else if (oni_state == 2)
+	{
+		SpriteBatch.Draw(*lose, Vector3(oni_pos.x, oni_pos.y - 20, 0), RectWH(50 * (int)lose_flame, 0, 50, 70), invisible_alpha);
 	}
 	else
 	{
-		SpriteBatch.Draw(*oni, oni_pos, oni_alpha);
+		SpriteBatch.Draw(*oni, Vector3(oni_pos.x, oni_pos.y - 20, 0), RectWH((int)anime * 50, (int)direc4 * 70, 50, 70), oni_alpha);
 	}
 	
 
 	//SpriteBatch.Draw(*onipunch, Vector3(0, 0, 0), RectWH(50 * (int)oni_flame_x, 70 * (int)oni_flame_y, 50, 70), oni_alpha);
-
-	if (oni_state == 1)
-	{
-		SpriteBatch.Draw(*lose, player_pos, RectWH(50 * (int)lose_flame, 0, 50, 70), invisible_alpha);
+	if (oni_state == 1) {
+		SpriteBatch.Draw(*down, Vector3(player_pos.x, player_pos.y - 20, 0), RectWH(50 * (int)down_flame, (int)direc*70, 50, 70), invisible_alpha);
+	}
+	else if (oni_state == 2) {
+		SpriteBatch.Draw(*playerwin, Vector3(player_pos.x, player_pos.y - 20, 0), RectWH(50 * (int)win_flame, 0, 50, 70), invisible_alpha);
 	}
 	else
 	{
-		SpriteBatch.Draw(*player, player_pos, RectWH(0, 0, 50, 70), invisible_alpha);
+		SpriteBatch.Draw(*player, Vector3(player_pos.x,player_pos.y-20,0), RectWH((int)anime*50, (int)direc*70, 50, 70), invisible_alpha);
 	}
 
-		SpriteBatch.Draw(*player, fake_pos, invisible_alpha);
-		SpriteBatch.Draw(*player, fake2_pos, invisible_alpha);
+		SpriteBatch.Draw(*player, Vector3(fake_pos.x, fake_pos.y - 20, 0), RectWH((int)anime * 50,(int) direc2 * 70, 50, 70),invisible_alpha);
+		SpriteBatch.Draw(*player, Vector3(fake2_pos.x, fake2_pos.y - 20, 0), RectWH((int)anime * 50, (int)direc3* 70, 50, 70), invisible_alpha);
 	/*if (p_walk_flag == 0)
 	{
 		SpriteBatch.Draw(*player, player_pos, invisible_alpha);
@@ -1326,8 +1363,8 @@ void GameMain::Draw()
 
 	}*/
 
-	/*SpriteBatch.DrawString(DefaultFont, Vector2(960, 0),
-		Color(0, 0, 255), _T("TIME:%d"), time);*/
+	SpriteBatch.DrawString(DefaultFont, Vector2(960, 0),
+		Color(0, 0, 255), _T("TIME:%d"), time);
 	
 
 	if (skill_state == true)
