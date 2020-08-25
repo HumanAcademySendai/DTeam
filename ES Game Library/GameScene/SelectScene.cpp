@@ -12,10 +12,16 @@ int SelectScene:: selectNo= 0;
 bool SelectScene::Initialize()
 {
 	// TODO: Add your initialization logic here
+	MediaManager.Attach(GraphicsDevice);
 	selectNo = 0;
 	InputDevice.CreateGamePad(2);
 	bg = GraphicsDevice.CreateSpriteFromFile(_T("select.png"));
+	bg2 = GraphicsDevice.CreateSpriteFromFile(_T("select2.png"));
+	bg3 = GraphicsDevice.CreateSpriteFromFile(_T("select3.png"));
 
+	bgm = MediaManager.CreateMediaFromFile(_T("bgm_maoudamashii_cyber29.mp3"));
+	bgm->Play();
+	state = 0;
 
 	return true;
 }
@@ -43,18 +49,35 @@ int SelectScene::Update()
 	KeyboardBuffer keys = Keyboard->GetBuffer();
 	GamePadState pad_2 = GamePad(1)->GetState();
 
-	if (keys.IsPressed(Keys_Return)||pad_2.Buttons[9]) {
+	if (state == 0) {
+		if (keys.IsPressed(Keys_Return) || pad_2.Buttons[9]) {
+			state = 1;
+		}
+	}
+	else if (state == 1) {
+		if (keys.IsPressed(Keys_Return) || pad_2.Buttons[9]) {
+			state = 2;
+		}
+	}
+	else if (state == 2) {
+		if (s_s == 1) {
+		if (keys.IsPressed(Keys_Return) || pad_2.Buttons[9]) {
 
-		return GAME_SCENE(new GameMain);
+			return GAME_SCENE(new GameMain);
+		}
+	}
 	}
 	if (keys.IsPressed(Keys_Z) || pad_2.Buttons[0]) {
 		selectNo = 0;
+		s_s = 1;
 	}
 	if (keys.IsPressed(Keys_X) || pad_2.Buttons[1]) {
 		selectNo = 1;
+		s_s = 1;
 	}
 	if (keys.IsPressed(Keys_C) || pad_2.Buttons[2]) {
 		selectNo = 2;
+		s_s = 1;
 	}
 
 	
@@ -74,8 +97,15 @@ void SelectScene::Draw()
 	GraphicsDevice.BeginScene();
 	SpriteBatch.Begin();
 
-	SpriteBatch.Draw(*bg, Vector3(0, 0, 0));
-
+	if (state == 0) {
+		SpriteBatch.Draw(*bg, Vector3(0, 0, 0));
+	}
+	else if(state == 1){
+		SpriteBatch.Draw(*bg2, Vector3(0, 0, 0));
+	}
+	else if (state == 2) {
+		SpriteBatch.Draw(*bg3, Vector3(0, 0, 0));
+	}
 	SpriteBatch.End();
 
 	GraphicsDevice.EndScene();

@@ -23,12 +23,15 @@ bool titleScene::Initialize()
 	se= MediaManager.CreateMediaFromFile(_T("click.mp3"));
 	original= GraphicsDevice.CreateSpriteFont(_T("georgia"), 80);
 
+	bgm = MediaManager.CreateMediaFromFile(_T("bgm_maoudamashii_cyber29.mp3"));
 	pict= GraphicsDevice.CreateSpriteFromFile(_T("pict.png"));
 	chara_x = 0;
 	spy = GraphicsDevice.CreateSpriteFromFile(_T("Spy.png"));
 	escape = GraphicsDevice.CreateSpriteFromFile(_T("escape.png"));
 	spy_x = -1600;
 	escape_x = 1600;
+
+	bgm->Play();
 
 	alpha = 0;
 	alpha_flag = true;

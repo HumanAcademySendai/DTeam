@@ -62,6 +62,13 @@ private:
 	float limit;
 
 	SPRITE bg;
+	SPRITE bg2;
+	SPRITE bg3;
+
+	MEDIA bgm;
+
+	int state;
+	int s_s;
 
 
 	// 関数プロトタイプ

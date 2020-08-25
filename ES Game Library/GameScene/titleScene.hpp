@@ -68,6 +68,7 @@ private:
 	int sceneflag;
 
 	MEDIA se;
+	MEDIA bgm;
 
 	FONT original;
 	Color Bcolor;

@@ -60,7 +60,7 @@ private:
 	void Fake2();
 	void AI();
 	cstring map_data_b[18];
-
+	FONT newfont;
 
 public:
 	static int GetTime() { return time; }
@@ -99,6 +99,7 @@ private:
 	float oni_alpha;
 	float oni_spd;
 	float stun_time;
+	float oni_count;
 	bool stun_state;
 
 	SPRITE onipunch;
@@ -121,6 +122,7 @@ private:
 	SPRITE ton;
 	SPRITE down;
 	SPRITE oniwin;
+	SPRITE isu;
 	Vector3 fake_pos;
 	Vector3 fake2_pos;
 	Vector3 player_pos;
@@ -149,6 +151,7 @@ private:
 	int a,b;
 
 	MEDIA bgm;
+	MEDIA skil;
 	SOUND se;
 
 
