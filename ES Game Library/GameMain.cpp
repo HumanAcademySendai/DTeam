@@ -26,14 +26,17 @@ bool GameMain::Initialize()
 	MediaManager.Attach(GraphicsDevice);
 
 
-	bgm = MediaManager.CreateMediaFromFile(_T("bgm.mp3"));
+	bgm = MediaManager.CreateMediaFromFile(_T("bgm3.mp3"));
 	bgm->Play();
+	mission = MediaManager.CreateMediaFromFile(_T("mission.mp3"));
+	
+
 
 	bg = GraphicsDevice.CreateSpriteFromFile(_T("deza.png"));
 	se = SoundDevice.CreateSoundFromFile(_T("nc86224.wav"));
 
 
-	time = 40;
+	time = 60;
 	flame = 0;
 
 	//player = GraphicsDevice.CreateSpriteFromFile(_T("Image/Chara.png"));
@@ -67,6 +70,7 @@ bool GameMain::Initialize()
 	skill_state = false;
 	skill_time = 0.0f;
 	skill_alpha = 1.0f;
+	a_alfa = 1.0f;
 	oni_alpha = 1.0f;
 	alpha_flag = false;
 	fake_flag = false;
@@ -153,6 +157,16 @@ bool GameMain::Initialize()
 
 	for (int y = 0; y < 18; y++) {
 		for (int x = 0; x < map_data_b[y].size(); x++)
+			dist3[y].push_back(0);
+	}
+
+	for (int y = 0; y < 18; y++) {
+		for (int x = 0; x < map_data_b[y].size(); x++)
+			dist4[y].push_back(0);
+	}
+
+	for (int y = 0; y < 18; y++) {
+		for (int x = 0; x < map_data_b[y].size(); x++)
 			dist_player[y].push_back(0);
 	}
 
@@ -196,13 +210,23 @@ bool GameMain::Initialize()
 		my_k[i] = 0;
 		mx_i[i] = 0;
 		my_i[i] = 0;
+		mx_h[i] = 0;
+		my_h[i] = 0;
+		mx_g[i] = 0;
+		my_g[i] = 0;
 
 	}
 
+	direc5 = 0;
+	direc6 = 0;
+
 	k_count = 10;
 	j_count = 10;
+	h_count = 10;
+	g_count = 10;
 	j = 0;
-
+	h = 0;
+	g = 0;
 	k = 0;
 	//for (int y = 0; y < 18; y++) {
 	//	for (int x = 0; x < 32; x++) {
@@ -263,7 +287,8 @@ bool GameMain::Initialize()
 		fake2_pos = start_Pos[1];
 	}
 
-
+	fake3_pos = Vector3(850, 700, 0);
+	fake4_pos = Vector3(50, 750, 0);
 
 	prev_mx = -1;
 	prev_my = -1;
@@ -298,6 +323,14 @@ int GameMain::Update()
 	Fake();
 	Fake2();
 
+	if (time > 10) {
+		Fake3();
+		Fake4();
+	}
+	//
+
+	//
+
 	if (stun_state == true) {
 		if (fake_flag = true && oni_alpha >= 255) {
 			fake_flag = false;
@@ -326,6 +359,22 @@ int GameMain::Update()
 				oni_state = 2;
 			}
 		}
+	}
+
+	if (time == 20) {
+		bgm->Stop();
+		mission->Play();
+		
+	}
+	if (time <= 15) {
+		a_alfa += 2.0f;
+	}
+	if (a_alfa >= 255.0f) {
+		a_alfa = 255.0f;
+	}
+
+	if (time == 15) {
+		oni_spd = player_spd * 1.5;
 	}
 
 	if (lose_time >= 180) {
@@ -1350,6 +1399,207 @@ void GameMain::Fake2() {
 
 void GameMain::Fake3()
 {
+	int mx = (int)(fake3_pos.x / 50);
+	int my = (int)(fake3_pos.y / 50);
+
+	float max2 = 0;
+
+
+	if (h_count == 10) {
+
+
+		h = 0;
+
+		if (randam_skil != 4) {
+			if (oni_state == 0) {
+				if (time % 10 != 0) {
+					if (dist3[my - 1][mx] > max2) {
+						max2 = dist3[my - 1][mx];
+						h = 1;
+					}
+					if (dist3[my + 1][mx] > max2) {
+						max2 = dist3[my + 1][mx];
+						h = 2;
+
+					}
+
+					if (dist3[my][mx + 1] > max2) {
+						max2 = dist3[my][mx + 1];
+						h = 3;
+
+					}
+
+					if (dist3[my][mx - 1] > max2) {
+						max2 = dist3[my][mx - 1];
+						h = 4;
+					}
+
+					if (h != 0) {
+
+
+						for (int i = 3; i > 0; i--) {
+							dist[my_h[i]][my_h[i]] = 0;
+							dist_player[my_h[i]][my_h[i]] = 0;
+						}
+						for (int i = 3; i > 0; i--) {
+							my_h[i] = my_h[i - 1];
+							my_h[i] = my_h[i - 1];
+						}
+						my_h[0] = mx;
+						my_h[0] = my;
+
+						h_count = 0;
+
+
+					}
+				}
+			}
+		}
+	}
+
+
+	//		}
+
+	if (h == 1) {
+
+		fake3_pos.y -= 5;
+		direc5 = 3;
+		h_count++;
+	}
+	if (h == 2) {
+
+		fake3_pos.y += 5;
+		direc5 = 0;
+		h_count++;
+	}
+	if (h == 3) {
+		fake3_pos.x += 5;
+		direc5 = 1;
+		h_count++;
+	}
+
+	if (h == 4) {
+
+		fake3_pos.x -= 5;
+		direc5 = 2;
+		h_count++;
+	}
+
+	// 鬼とデコイの当たり判定
+	if (invisible_state == false) {
+		if (punch_state == 1) {
+			if (oni_pos.x + 35 < fake3_pos.x + 15 || oni_pos.x + 15 > fake3_pos.x + 35 ||
+				oni_pos.y + 40 < fake3_pos.y + 10 || oni_pos.y + 10 > fake3_pos.y + 40) {
+			}
+			else if (time >= 0) {
+
+				stun_state = true;
+			}
+
+		}
+	}
+}
+
+void GameMain::Fake4()
+{
+	int mx = (int)(fake4_pos.x / 50);
+	int my = (int)(fake4_pos.y / 50);
+
+	float max2 = 0;
+
+
+	if (g_count == 10) {
+
+
+		g = 0;
+		if (randam_skil != 4) {
+			if (oni_state == 0) {
+				if (time % a != 0) {
+					if (dist4[my - 1][mx] > max2) {
+						max2 = dist4[my - 1][mx];
+						g = 1;
+					}
+					if (dist4[my + 1][mx] > max2) {
+						max2 = dist4[my + 1][mx];
+						g = 2;
+
+					}
+
+					if (dist4[my][mx + 1] > max2) {
+						max2 = dist4[my][mx + 1];
+						g = 3;
+
+					}
+
+					if (dist4[my][mx - 1] > max2) {
+						max2 = dist4[my][mx - 1];
+						g = 4;
+					}
+
+					if (g != 0) {
+
+
+						for (int i = 3; i > 0; i--) {
+							dist[my_g[i]][mx_g[i]] = 0;
+							dist_player[my_g[i]][mx_g[i]] = 0;
+						}
+						for (int i = 3; i > 0; i--) {
+							mx_g[i] = mx_g[i - 1];
+							my_g[i] = my_g[i - 1];
+						}
+						mx_g[0] = mx;
+						my_g[0] = my;
+
+						g_count = 0;
+
+
+					}
+				}
+			}
+		}
+	}
+
+
+	//		}
+
+	if (g == 1) {
+
+		fake4_pos.y -= 5;
+		direc6 = 3;
+		g_count++;
+	}
+	if (g == 2) {
+
+		fake4_pos.y += 5;
+		direc6 = 0;
+		g_count++;
+	}
+	if (g == 3) {
+		fake4_pos.x += 5;
+		direc6 = 1;
+		g_count++;
+	}
+
+	if (g == 4) {
+
+		fake4_pos.x -= 5;
+		direc6 = 2;
+		g_count++;
+	}
+
+	// 鬼とデコイの当たり判定
+	if (invisible_state == false) {
+		if (punch_state == 1) {
+			if (oni_pos.x + 35 < fake4_pos.x + 15 || oni_pos.x + 15 > fake4_pos.x + 35 ||
+				oni_pos.y + 40 < fake4_pos.y + 10 || oni_pos.y + 10 > fake4_pos.y + 40) {
+			}
+			else if (time >= 0) {
+
+				stun_state = true;
+			}
+
+		}
+	}
 }
 
 void GameMain::AI()
@@ -1369,6 +1619,24 @@ void GameMain::AI()
 				dist_AI[y][x] = dist_player[y][x] * 0.5 + dist[y][x] * 0.5;
 			else
 				dist_AI[y][x] = 0;
+		}
+	}
+
+	for (int y = 0; y < 18; y++) {
+		for (int x = 0; x < map_data_b[y].size(); x++) {
+			if (dist3[y][x] >= 0)
+				dist3[y][x] = dist_player[y][x] * 0.3 + dist[y][x] * 0.7;
+			else
+				dist3[y][x] = 0;
+		}
+	}
+
+	for (int y = 0; y < 18; y++) {
+		for (int x = 0; x < map_data_b[y].size(); x++) {
+			if (dist4[y][x] >= 0)
+				dist4[y][x] = dist_player[y][x] * 0.2 + dist[y][x] * 0.8;
+			else
+				dist4[y][x] = 0;
 		}
 	}
 
@@ -1490,6 +1758,13 @@ void GameMain::Draw()
 
 	SpriteBatch.Draw(*player, Vector3(fake_pos.x, fake_pos.y - 20, 0), RectWH((int)anime * 50, (int)direc2 * 70, 50, 70), invisible_alpha);
 	SpriteBatch.Draw(*player, Vector3(fake2_pos.x, fake2_pos.y - 20, 0), RectWH((int)anime * 50, (int)direc3 * 70, 50, 70), invisible_alpha);
+
+	if (time > 10) {
+		SpriteBatch.Draw(*player, Vector3(fake3_pos.x, fake3_pos.y - 20, 0), RectWH((int)anime * 50, (int)direc5 * 70, 50, 70), a_alfa);
+		
+		SpriteBatch.Draw(*player, Vector3(fake4_pos.x, fake4_pos.y - 20, 0), RectWH((int)anime * 50, (int)direc6 * 70, 50, 70), a_alfa);
+		
+	}
 	/*if (p_walk_flag == 0)
 	{
 		SpriteBatch.Draw(*player, player_pos, invisible_alpha);
@@ -1508,7 +1783,7 @@ void GameMain::Draw()
 
 	/*for (int y = 0; y < 18; y++) {
 		for (int x = 0; x < dist[y].size(); x++) {
-			SpriteBatch.DrawString(DefaultFont, Vector2(x * 48, y * 16), Color(0, 0, 0), _T("%01.3f"), dist_AI[y][x]);
+			SpriteBatch.DrawString(DefaultFont, Vector2(x * 48, y * 16), Color(0, 0, 0), _T("%01.3f"), dist3[y][x]);
 		}
 	}*/
 
@@ -1542,6 +1817,5 @@ void GameMain::Draw()
 
 	GraphicsDevice.EndScene();
 }
-
 
 

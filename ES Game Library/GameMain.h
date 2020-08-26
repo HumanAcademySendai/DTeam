@@ -59,6 +59,7 @@ private:
 	void Fake();
 	void Fake2();
 	void Fake3();
+	void Fake4();
 	void AI();
 	cstring map_data_b[18];
 	FONT newfont;
@@ -133,8 +134,6 @@ private:
 	SPRITE down;
 	SPRITE oniwin;
 	SPRITE isu;
-	Vector3 fake_pos;
-	Vector3 fake2_pos;
 	Vector3 change;
 	Color cl;
 	float anime;
@@ -145,27 +144,37 @@ private:
 	float direc3;
 	float direc4;
 	float direc5;
+	float direc6;
 	
 
-	
+	float a_alfa;
 	
 	int f;
 	float speed = 5;
 	//AI
+	Vector3 fake_pos;
+	Vector3 fake2_pos;
+	Vector3 fake3_pos;
+	Vector3 fake4_pos;
 	int k_count;
 	int k;
 	int j;
 	int j_count;
+	int h, h_count;
+	int g, g_count;
 	int a,b;
 	int AI_count;
 
 	MEDIA bgm;
 	MEDIA skil;
+	MEDIA mission;
 	SOUND se;
 
 
 	std::vector<float> dist[18];
 	std::vector<float> dist2[18];
+	std::vector<float> dist3[18];
+	std::vector<float> dist4[18];
 	std::vector<float> dist_player[18];
 	std::vector<float> dist_AI[18];
 
@@ -181,6 +190,8 @@ private:
 
 	int mx_k[4],my_k[4];
 	int  mx_i[4], my_i[4];
+	int  mx_h[4], my_h[4];
+	int  mx_g[4], my_g[4];
 
 	int prev_mx, prev_my;
 	int prev_mx2, prev_my2;

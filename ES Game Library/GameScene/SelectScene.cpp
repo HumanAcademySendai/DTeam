@@ -47,35 +47,36 @@ int SelectScene::Update()
 {
     // TODO: Add your update logic here
 	KeyboardBuffer keys = Keyboard->GetBuffer();
-	GamePadState pad_2 = GamePad(1)->GetState();
+	GamePadBuffer pad_2 = GamePad(1)->GetBuffer();
+	GamePadState pad_1 = GamePad(1)->GetState();
 
 	if (state == 0) {
-		if (keys.IsPressed(Keys_Return) || pad_2.Buttons[9]) {
+		if (keys.IsPressed(Keys_Return) || pad_2.IsPressed(GamePad_Button10)) {
 			state = 1;
 		}
 	}
 	else if (state == 1) {
-		if (keys.IsPressed(Keys_Return) || pad_2.Buttons[9]) {
+		if (keys.IsPressed(Keys_Return) || pad_2.IsPressed(GamePad_Button10)) {
 			state = 2;
 		}
 	}
 	else if (state == 2) {
 		if (s_s == 1) {
-		if (keys.IsPressed(Keys_Return) || pad_2.Buttons[9]) {
+		if (keys.IsPressed(Keys_Return) || pad_2.IsPressed(GamePad_Button10)) {
 
 			return GAME_SCENE(new GameMain);
 		}
 	}
 	}
-	if (keys.IsPressed(Keys_M) || pad_2.Buttons[0]) {
+	if (keys.IsPressed(Keys_M) || pad_1.Buttons[0]) {
 		selectNo = 0;
 		s_s = 1;
 	}
-	if (keys.IsPressed(Keys_K) || pad_2.Buttons[1]) {
+	if (keys.IsPressed(Keys_K) || pad_1.Buttons[1]) {
 		selectNo = 1;
 		s_s = 1;
 	}
-	if (keys.IsPressed(Keys_O) || pad_2.Buttons[2]) {
+	if (keys.IsPressed(Keys_O) || pad_1.Buttons[2]) {
 		selectNo = 2;
 		s_s = 1;
 	}
