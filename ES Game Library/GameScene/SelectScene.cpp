@@ -67,15 +67,15 @@ int SelectScene::Update()
 		}
 	}
 	}
-	if (keys.IsPressed(Keys_Z) || pad_2.Buttons[0]) {
+	if (keys.IsPressed(Keys_M) || pad_2.Buttons[0]) {
 		selectNo = 0;
 		s_s = 1;
 	}
-	if (keys.IsPressed(Keys_X) || pad_2.Buttons[1]) {
+	if (keys.IsPressed(Keys_K) || pad_2.Buttons[1]) {
 		selectNo = 1;
 		s_s = 1;
 	}
-	if (keys.IsPressed(Keys_C) || pad_2.Buttons[2]) {
+	if (keys.IsPressed(Keys_O) || pad_2.Buttons[2]) {
 		selectNo = 2;
 		s_s = 1;
 	}

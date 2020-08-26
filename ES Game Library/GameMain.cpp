@@ -686,6 +686,37 @@ void GameMain::Player()
 		}
 	}
 
+	if (pad2_direction == 0) {
+		if (key.IsKeyDown(Keys_Right)|| key.IsKeyDown(Keys_Left) || key.IsKeyDown(Keys_Down) || key.IsKeyDown(Keys_Up)) {
+			int mx = (int)(player_pos.x / 50);
+			int my = (int)(player_pos.y / 50);
+				if (key.IsKeyDown(Keys_Right)) {
+					if (map_data_b[my][mx + 1] == ' ') {
+						pad2_direction = 6;
+						player_count = 0;
+					}
+				}
+				else if (key.IsKeyDown(Keys_Left)) {
+					if (map_data_b[my][mx - 1] == ' ') {
+						pad2_direction = 4;
+						player_count = 0;
+					}
+				}
+				else if (key.IsKeyDown(Keys_Down)) {
+					if (map_data_b[my + 1][mx] == ' ') {
+						pad2_direction = 2;
+						player_count = 0;
+					}
+				}
+				else if (key.IsKeyDown(Keys_Up)) {
+					if (map_data_b[my - 1][mx] == ' ') {
+						pad2_direction = 8;
+						player_count = 0;
+					}
+				}
+			
+		}
+	}
 
 	//if (pad_buffer.Buffer[0].DeviceType == GamePad_X) {
 	//	if (pad_buffer.Buffer[0].Data.dwData != 0) {
@@ -746,7 +777,7 @@ void GameMain::Player()
 
 	if (randam_skil != 4) {
 		if (oni_state == 0) {
-			if (key.IsKeyDown(Keys_Right) || pad2_direction == 6 /* pad_2.X > 0 */) {
+			if (/*key.IsKeyDown(Keys_Right) ||*/ pad2_direction == 6 /* pad_2.X > 0 */) {
 				player_pos.x += player_spd;
 				direc = 1;
 
@@ -773,7 +804,7 @@ void GameMain::Player()
 			}
 
 
-		else if (key.IsKeyDown(Keys_Left) || pad2_direction == 4 /* pad_2.X < 0 */) {
+		else if (/*key.IsKeyDown(Keys_Left) ||*/ pad2_direction == 4 /* pad_2.X < 0 */) {
 			player_pos.x -= player_spd;
 			direc = 2;
 
@@ -800,7 +831,7 @@ void GameMain::Player()
 					//}
 		}
 
-		else if (key.IsKeyDown(Keys_Down) || pad2_direction == 2/* pad_2.Y > 0 */) {
+		else if (/*key.IsKeyDown(Keys_Down) ||*/ pad2_direction == 2/* pad_2.Y > 0 */) {
 			player_pos.y += player_spd;
 			direc = 0;
 
@@ -832,7 +863,7 @@ void GameMain::Player()
 				}*/
 		}
 
-		else if (key.IsKeyDown(Keys_Up) || pad2_direction == 8/* pad_2.Y < 0 */) {
+		else if (/*key.IsKeyDown(Keys_Up) ||*/ pad2_direction == 8/* pad_2.Y < 0 */) {
 				player_pos.y -= player_spd;
 				direc = 3;
 
@@ -863,9 +894,7 @@ void GameMain::Player()
 			}*/
 			}
 
-			if (key_buffer.IsPressed(Keys_M)) {
-				punch_state = 1;
-			}
+			
 		}
 	}
 
@@ -874,7 +903,7 @@ void GameMain::Player()
 
 	if (f < 5) {
 		if (skil_time == 0) {
-			if (key_buffer.IsPressed(Keys_Space) || pad_buffer.IsPressed(GamePad_Button6)) {
+			if (key_buffer.IsPressed(Keys_L) || pad_buffer.IsPressed(GamePad_Button6)) {
 
 				/*randam_skil += 1;*/
 				skil->Play();
@@ -898,8 +927,7 @@ void GameMain::Player()
 
 	if (black_flag == false)
 	{
-		/*if (key_buffer.IsPressed(Keys_Space) || pad_buffer.IsPressed(GamePad_Button6))
-		{*/if (randam_skil == 1) {
+		if (randam_skil == 1) {
 			skill_state = true;
 			alpha_flag = true;
 			black_flag = true;
@@ -1055,7 +1083,7 @@ void GameMain::Player()
 
 	// ƒpƒ“ƒ`
 	if (oni_state == 0) {
-		if (key_buffer.IsPressed(Keys_M) || pad_buffer2.IsPressed(GamePad_Button6))
+		if (key_buffer.IsPressed(Keys_G) || pad_buffer2.IsPressed(GamePad_Button6))
 		{
 			punch_state = 1;
 		}
