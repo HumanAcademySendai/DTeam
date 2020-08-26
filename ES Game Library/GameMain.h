@@ -58,6 +58,7 @@ private:
 	void Player();
 	void Fake();
 	void Fake2();
+	void Fake3();
 	void AI();
 	cstring map_data_b[18];
 	FONT newfont;
@@ -73,15 +74,19 @@ private:
 	FONT original;
 
 	float flame;
-
+	//player
 	SPRITE player;
-	float player_spd;
-
 	SPRITE playerwalk;
 	SPRITE playerwin;
+	Vector3 player_pos;
 	float p_flame_x,p_flame_y;
 	int p_walk_flag;
+	float player_spd;
+	float player_state;
+	int player_count;
+	float down_flame;
 
+	//skil
 	SPRITE skill;
 	bool skill_state;
 	float skill_time;
@@ -93,7 +98,12 @@ private:
 	float invisible_state;
 	float invisible_time;
 	float invisible_alpha;
-
+	float randam_skil;
+	float randam[5];
+	float skil_time;
+	float ‰z‘O;
+	
+	//oni
 	SPRITE oni;
 	Vector3 oni_pos;
 	float oni_alpha;
@@ -125,30 +135,29 @@ private:
 	SPRITE isu;
 	Vector3 fake_pos;
 	Vector3 fake2_pos;
-	Vector3 player_pos;
 	Vector3 change;
 	Color cl;
 	float anime;
+
+	//direction
 	float direc;
 	float direc2;
 	float direc3;
 	float direc4;
 	float direc5;
-	float player_state;
-	int player_count;
-	int AI_count;
-	float down_flame;
-	float randam_skil;
-	float randam[5];
-	float skil_time;
-	float ‰z‘O;
+	
+
+	
+	
 	int f;
 	float speed = 5;
+	//AI
 	int k_count;
 	int k;
 	int j;
 	int j_count;
 	int a,b;
+	int AI_count;
 
 	MEDIA bgm;
 	MEDIA skil;

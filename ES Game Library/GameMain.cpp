@@ -1348,6 +1348,10 @@ void GameMain::Fake2() {
 
 }
 
+void GameMain::Fake3()
+{
+}
+
 void GameMain::AI()
 {
 	for (int y = 0; y < 18; y++) {
@@ -1538,3 +1542,6 @@ void GameMain::Draw()
 
 	GraphicsDevice.EndScene();
 }
+
+
+
