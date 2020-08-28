@@ -170,6 +170,9 @@ private:
 	MEDIA mission;
 	SOUND se;
 
+	MEDIA skillse;
+	MEDIA stunse;
+
 
 	std::vector<float> dist[18];
 	std::vector<float> dist2[18];

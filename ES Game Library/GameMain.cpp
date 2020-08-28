@@ -27,10 +27,11 @@ bool GameMain::Initialize()
 
 
 	bgm = MediaManager.CreateMediaFromFile(_T("bgm3.mp3"));
-	bgm->Play();
+	//bgm->Play();
 	mission = MediaManager.CreateMediaFromFile(_T("mission.mp3"));
-	
 
+	skillse = MediaManager.CreateMediaFromFile(_T("skillse01.mp3"));
+	stunse = MediaManager.CreateMediaFromFile(_T("stunse01.mp3"));
 
 	bg = GraphicsDevice.CreateSpriteFromFile(_T("deza.png"));
 	se = SoundDevice.CreateSoundFromFile(_T("nc86224.wav"));
@@ -955,7 +956,7 @@ void GameMain::Player()
 			if (key_buffer.IsPressed(Keys_L) || pad_buffer.IsPressed(GamePad_Button6)) {
 
 				/*randam_skil += 1;*/
-				skil->Play();
+				skillse->Replay();
 				randam_skil = MathHelper_Random(1, 5);
 				for (int i = -1; i < f; i++) {
 					if (randam[i] == randam_skil) {
@@ -1267,6 +1268,7 @@ void GameMain::Fake()
 			else if (time >= 0) {
 
 				stun_state = true;
+				stunse->Replay();
 			}
 
 		}
@@ -1381,6 +1383,7 @@ void GameMain::Fake2() {
 			else if (time >= 0) {
 
 				stun_state = true;
+				stunse->Replay();
 			}
 
 		}
@@ -1494,6 +1497,7 @@ void GameMain::Fake3()
 			else if (time >= 0) {
 
 				stun_state = true;
+				stunse->Replay();
 			}
 
 		}
@@ -1596,6 +1600,7 @@ void GameMain::Fake4()
 			else if (time >= 0) {
 
 				stun_state = true;
+				stunse->Replay();
 			}
 
 		}
